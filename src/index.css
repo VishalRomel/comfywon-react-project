@@ -2,6 +2,7 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
@@ -9,8 +10,99 @@ body {
   min-width: 320px;
   min-height: 100vh;
   background: #fff7f4;
+  overflow-x: hidden;
+}
+
+#root {
+  overflow-x: hidden;
+}
+
+@media (max-width: 430px) {
+  .mobile-header-buy {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .mobile-card-bound {
+    width: calc(100vw - 2rem);
+    max-width: 358px;
+  }
 }
 
 button {
   cursor: pointer;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    border-color 180ms ease,
+    background-color 180ms ease;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:hover {
+  transform: translateY(-1px);
+}
+
+img {
+  transition: transform 450ms ease;
+}
+
+article:hover img {
+  transform: scale(1.025);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.petal-field::before,
+.petal-field::after {
+  content: "";
+  position: absolute;
+  border-radius: 999px 999px 999px 0;
+  background: rgba(245, 155, 177, 0.32);
+  filter: blur(0.2px);
+  transform: rotate(-28deg);
+}
+
+.petal-field::before {
+  right: 8%;
+  top: 12%;
+  width: 28px;
+  height: 44px;
+  box-shadow:
+    -42vw 18vh 0 -6px rgba(245, 155, 177, 0.22),
+    -18vw 48vh 0 -8px rgba(245, 155, 177, 0.26),
+    6vw 54vh 0 -5px rgba(245, 155, 177, 0.22);
+}
+
+.petal-field::after {
+  right: 2%;
+  bottom: 10%;
+  width: 34px;
+  height: 52px;
+  opacity: 0.65;
+  box-shadow:
+    -50vw -10vh 0 -8px rgba(245, 155, 177, 0.2),
+    -24vw -42vh 0 -9px rgba(245, 155, 177, 0.26),
+    -8vw -18vh 0 -7px rgba(245, 155, 177, 0.22);
 }
