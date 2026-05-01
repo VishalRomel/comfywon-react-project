@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
 const ICON_PATHS = {
   menu: (
@@ -278,27 +278,21 @@ const LIFESTYLE_CARDS = [
 const PAIN_RELIEF = [
   {
     label: "Cramps",
-    title: "Period Comfort",
-    text: "Soothing heat for lower abdominal discomfort.",
-    image: "/Listing Image 2.jpg",
+    title: "Period Cramp Pain",
+    text: "Fast soothing warmth helps ease period cramps within minutes.",
+    image: "/Period Cramp Pain.png",
   },
   {
-    label: "Bloating",
-    title: "Belly Relief",
-    text: "Warm compression helps you feel settled faster.",
-    image: "/Listing Image 3.jpg",
+    label: "Back Pain",
+    title: "Lower Back Relief",
+    text: "Targeted heat helps loosen tight lower-back tension fast.",
+    image: "/Back pain.png",
   },
   {
-    label: "Back",
-    title: "Lower Back",
-    text: "Wear it behind you for tight lower-back days.",
-    image: "/Listing Image 2.jpg",
-  },
-  {
-    label: "Travel",
-    title: "On The Go",
-    text: "Cordless warmth for commuting, errands, and flights.",
-    image: "/Listing Image 5.jpg",
+    label: "Stomach Pain",
+    title: "Stomach Pain Relief",
+    text: "Gentle 3-second heat helps calm belly aches and discomfort.",
+    image: "/Stomach Pain.png",
   },
 ];
 
@@ -418,7 +412,7 @@ function Reveal({ as = "div", children, className = "", delay = 0 }) {
 
   return (
     <Component
-      initial={{ opacity: 0, y: 18 }}
+      initial={{ opacity: 0.96, y: 18 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.18 }}
       transition={{ duration: 0.5, ease: "easeOut", delay }}
@@ -455,7 +449,7 @@ function SectionHeading({ eyebrow, title, text, align = "center" }) {
   );
 }
 
-function Header({ route, navigate, goToSection }) {
+function Header({ route, navigate, goToSection, cartCount, onCartClick }) {
   const [open, setOpen] = useState(false);
 
   const navItems = [
@@ -496,12 +490,17 @@ function Header({ route, navigate, goToSection }) {
         </nav>
 
         <button
-          className="mobile-header-buy hidden h-11 items-center gap-2 justify-self-end rounded-full bg-gradient-to-r from-[#e65478] to-[#c40042] px-3 text-[14px] font-black text-white shadow-lg shadow-rose-300/50 sm:h-12 sm:px-6 sm:text-[15px] lg:flex"
-          onClick={() => navigate("product")}
+          className="relative flex h-11 w-11 items-center justify-center justify-self-end rounded-full bg-gradient-to-r from-[#e65478] to-[#c40042] text-white shadow-lg shadow-rose-300/50 sm:h-12 sm:w-auto sm:gap-2 sm:px-5 sm:text-[15px]"
+          onClick={onCartClick}
+          aria-label={cartCount > 0 ? `Open cart with ${cartCount} items` : "Open empty cart"}
         >
-          <Icon name="cart" size={18} />
-          <span className="sm:hidden">Buy</span>
-          <span className="hidden sm:inline">{route === "product" ? "Checkout" : "Buy Now"}</span>
+          <Icon name="cart" size={19} />
+          <span className="hidden font-black sm:inline">Cart</span>
+          {cartCount > 0 && (
+            <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full border-2 border-white bg-[#ffb703] px-1 text-[11px] font-black text-[#7a0030]">
+              {cartCount > 9 ? "9+" : cartCount}
+            </span>
+          )}
         </button>
       </div>
 
@@ -521,7 +520,7 @@ function Header({ route, navigate, goToSection }) {
               className="rounded-full bg-[#bd003f] px-4 py-3 text-left text-[15px] font-black text-white"
               onClick={() => runNav(() => navigate("product"))}
             >
-              Buy Now - $30
+              Shop ComfyWon - $30
             </button>
           </div>
         </div>
@@ -705,7 +704,7 @@ function ComfortSection() {
 function PainCard({ label, title, text, image }) {
   return (
     <Reveal as="article" className="min-w-[76%] snap-start overflow-hidden rounded-[24px] border border-rose-100 bg-white shadow-[0_18px_42px_rgba(178,75,98,0.13)] sm:min-w-[310px] lg:min-w-0">
-      <div className="relative h-44 overflow-hidden bg-rose-50">
+      <div className="relative h-52 overflow-hidden bg-rose-50 sm:h-56 lg:h-60">
         <img src={image} alt={title} className="h-full w-full object-cover" />
         <span className="absolute left-4 top-4 rounded-full bg-[#bd003f] px-3 py-1 text-[12px] font-black text-white shadow-lg">
           {label}
@@ -727,10 +726,16 @@ function PainReliefSection() {
     <section id="how-it-works" className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
       <SectionHeading
         eyebrow="Targeted warmth"
-        title="Relief for every kind of rough day."
-        text="Swipe on phone to scan the ways women use ComfyWon, or compare all four at once on desktop."
+        title={
+          <>
+            <span className="glow-3s block sm:inline">3s Heating</span>{" "}
+            <span className="block sm:inline">Rapid Pain Relief</span>{" "}
+            {/* <span className="block sm:inline">kind of rough day.</span> */}
+          </>
+        }
+        text="Swipe on phone to scan the three most common ways women use ComfyWon, or compare them side by side on desktop."
       />
-      <div className="no-scrollbar -mx-4 mt-6 flex snap-x gap-4 overflow-x-auto px-4 pb-2 sm:-mx-6 sm:px-6 lg:mx-0 lg:grid lg:grid-cols-4 lg:overflow-visible lg:px-0">
+      <div className="no-scrollbar -mx-4 mt-6 flex snap-x gap-4 overflow-x-auto px-4 pb-2 sm:-mx-6 sm:px-6 lg:mx-0 lg:grid lg:grid-cols-3 lg:overflow-visible lg:px-0">
         {PAIN_RELIEF.map((card) => (
           <PainCard key={card.title} {...card} />
         ))}
@@ -1065,9 +1070,8 @@ function ProductGallery({ selectedColor }) {
   );
 }
 
-function BuyBox({ selectedColor, setSelectedColor }) {
+function BuyBox({ selectedColor, setSelectedColor, onAddToCart }) {
   const [quantity, setQuantity] = useState(1);
-  const [message, setMessage] = useState("");
   const selected = PRODUCT_COLORS.find((item) => item.id === selectedColor);
   const countdown = useCountdown();
 
@@ -1140,19 +1144,12 @@ function BuyBox({ selectedColor, setSelectedColor }) {
       </div>
 
       <button
-        className="mt-5 flex h-14 w-full items-center justify-center gap-3 rounded-[18px] bg-[#bd003f] text-[18px] font-black text-white shadow-[0_16px_35px_rgba(182,63,98,0.30)]"
-        onClick={() => setMessage(`${selected?.label} selected. Checkout integration can connect here.`)}
+        className="mt-5 flex h-14 w-full items-center justify-center gap-3 rounded-[18px] bg-[#bd003f] py-3 text-[18px] font-black text-white shadow-[0_16px_35px_rgba(182,63,98,0.30)]"
+        onClick={() => onAddToCart({ quantity, color: selected })}
       >
-        Buy Now - $30
-        <Icon name="lock" size={20} />
+        Add to Cart
+        <Icon name="cart" size={20} />
       </button>
-      <button
-        className="mt-3 flex h-14 w-full items-center justify-center gap-3 rounded-[18px] border-2 border-[#bd003f] bg-white py-3 text-[16px] font-black text-[#bd003f]"
-        onClick={() => setMessage(`${quantity} ComfyWon added to your cart preview.`)}
-      >
-        Add To Cart
-      </button>
-      {message && <p className="mt-3 rounded-[18px] bg-[#f0fbf4] p-3 text-[13px] font-bold text-[#2d7b59]">{message}</p>}
 
       <div className="mt-5 grid gap-2 text-[13px] font-bold text-stone-700">
         {[
@@ -1173,7 +1170,202 @@ function BuyBox({ selectedColor, setSelectedColor }) {
   );
 }
 
-function ProductPage({ navigate }) {
+function CartConfirmationModal({ isOpen, cartCount, lastAdded, view, onClose, onCheckout, onShop }) {
+  const isEmpty = cartCount === 0 || view === "empty";
+  const isAdded = !isEmpty && view === "added";
+  const itemWord = cartCount === 1 ? "item" : "items";
+  const subtotal = cartCount * 30;
+  const eyebrow = isEmpty ? "Cart" : isAdded ? "Added to cart" : "Your cart";
+  const title = isEmpty ? "Your cart is empty." : isAdded ? "Your ComfyWon is in the cart." : "Your cart is ready.";
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          className="fixed inset-0 z-[90] flex items-end justify-center bg-[#3b0718]/35 px-4 pb-4 backdrop-blur-sm sm:items-center sm:pb-0"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          onClick={onClose}
+        >
+          <motion.div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="cart-dialog-title"
+            className="w-full max-w-md overflow-hidden rounded-[30px] bg-white shadow-[0_28px_90px_rgba(70,8,29,0.28)]"
+            initial={{ opacity: 0, y: 32, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 24, scale: 0.98 }}
+            transition={{ duration: 0.24, ease: "easeOut" }}
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="bg-[linear-gradient(135deg,#fff1f5,#fff9f6)] p-5">
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <span className="flex h-12 w-12 items-center justify-center rounded-full bg-[#bd003f] text-white shadow-lg shadow-rose-300/50">
+                    <Icon name={isAdded ? "check" : "cart"} size={24} />
+                  </span>
+                  <div>
+                    <p className="text-[12px] font-black uppercase tracking-[0.18em] text-rose-500">
+                      {eyebrow}
+                    </p>
+                    <h2 id="cart-dialog-title" className="text-[24px] font-black leading-tight text-[#bd003f]">
+                      {title}
+                    </h2>
+                  </div>
+                </div>
+                <button
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-[#bd003f] shadow-sm"
+                  onClick={onClose}
+                  aria-label="Close cart popup"
+                >
+                  <Icon name="x" size={21} />
+                </button>
+              </div>
+
+              <div className="mt-5 rounded-[22px] border border-rose-100 bg-white p-4">
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <p className="text-[15px] font-black text-stone-900">ComfyWon Cordless Heating Belt</p>
+                    <p className="mt-1 text-[13px] font-bold text-stone-500">
+                      {isEmpty
+                        ? "No items yet. Pick a color to start your cart."
+                        : isAdded && lastAdded
+                        ? `${lastAdded.quantity} ${lastAdded.colorLabel} added`
+                        : `${cartCount} ${itemWord} in your cart`}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-[13px] font-black text-rose-500">50% off</p>
+                    <p className="text-[21px] font-black text-stone-950">${subtotal}</p>
+                  </div>
+                </div>
+                <div className="mt-3 grid grid-cols-3 gap-2 text-center text-[11px] font-black text-stone-600">
+                  {["Free shipping", "USB-C", "30-day guarantee"].map((item) => (
+                    <span key={item} className="rounded-full bg-rose-50 px-2 py-2">
+                      {item}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {!isEmpty && (
+                <p className="mt-4 rounded-[18px] bg-white p-3 text-[13px] font-bold leading-snug text-stone-600">
+                  Your sale price, free shipping, and 30-day guarantee are saved in the cart.
+                </p>
+              )}
+            </div>
+
+            <div className="grid gap-3 p-5 sm:grid-cols-2">
+              <button
+                className="h-[52px] rounded-[18px] border-2 border-[#bd003f] bg-white px-4 py-3 text-[15px] font-black text-[#bd003f]"
+                onClick={onClose}
+              >
+                Continue Shopping
+              </button>
+              <button
+                className="h-[52px] rounded-[18px] bg-[#bd003f] px-4 py-3 text-[15px] font-black text-white shadow-[0_14px_30px_rgba(182,63,98,0.28)]"
+                onClick={isEmpty ? onShop : onCheckout}
+              >
+                {isEmpty ? "Shop ComfyWon" : "Go to Checkout"}
+              </button>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
+function CheckoutPlaceholderModal({ isOpen, cartCount, onClose, onBackToCart }) {
+  const itemWord = cartCount === 1 ? "item" : "items";
+  const subtotal = cartCount * 30;
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          className="fixed inset-0 z-[95] flex items-end justify-center bg-[#3b0718]/40 px-4 pb-4 backdrop-blur-sm sm:items-center sm:pb-0"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          onClick={onClose}
+        >
+          <motion.div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="checkout-placeholder-title"
+            className="w-full max-w-md overflow-hidden rounded-[30px] bg-white shadow-[0_28px_90px_rgba(70,8,29,0.30)]"
+            initial={{ opacity: 0, y: 34, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 24, scale: 0.98 }}
+            transition={{ duration: 0.24, ease: "easeOut" }}
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="bg-[linear-gradient(135deg,#bd003f,#e65478)] p-5 text-white">
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white/18 text-white shadow-lg">
+                    <Icon name="lock" size={24} />
+                  </span>
+                  <div>
+                    <p className="text-[12px] font-black uppercase tracking-[0.18em] text-white/75">
+                      Shopify checkout
+                    </p>
+                    <h2 id="checkout-placeholder-title" className="text-[25px] font-black leading-tight">
+                      Checkout placeholder
+                    </h2>
+                  </div>
+                </div>
+                <button
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-[#bd003f] shadow-sm"
+                  onClick={onClose}
+                  aria-label="Close checkout placeholder"
+                >
+                  <Icon name="x" size={21} />
+                </button>
+              </div>
+              <p className="mt-4 text-[14px] font-bold leading-relaxed text-white/90">
+                This is where customers will be sent to the Shopify cart once the store checkout is connected.
+              </p>
+            </div>
+
+            <div className="p-5">
+              <div className="rounded-[22px] border border-rose-100 bg-[#fff7f4] p-4">
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <p className="text-[15px] font-black text-stone-900">Cart total</p>
+                    <p className="mt-1 text-[13px] font-bold text-stone-500">
+                      {cartCount} {itemWord} ready for checkout
+                    </p>
+                  </div>
+                  <p className="text-[26px] font-black text-[#bd003f]">${subtotal}</p>
+                </div>
+              </div>
+
+              <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                <button
+                  className="h-[52px] rounded-[18px] border-2 border-[#bd003f] bg-white px-4 py-3 text-[15px] font-black text-[#bd003f]"
+                  onClick={onBackToCart}
+                >
+                  Back to Cart
+                </button>
+                <button
+                  className="h-[52px] rounded-[18px] bg-[#bd003f] px-4 py-3 text-[15px] font-black text-white shadow-[0_14px_30px_rgba(182,63,98,0.28)]"
+                  onClick={onClose}
+                >
+                  Keep Placeholder
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
+function ProductPage({ navigate, onAddToCart }) {
   const [selectedColor, setSelectedColor] = useState("pink");
 
   return (
@@ -1184,7 +1376,7 @@ function ProductPage({ navigate }) {
 
       <div className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr] lg:items-start">
         <ProductGallery selectedColor={selectedColor} />
-        <BuyBox selectedColor={selectedColor} setSelectedColor={setSelectedColor} />
+        <BuyBox selectedColor={selectedColor} setSelectedColor={setSelectedColor} onAddToCart={onAddToCart} />
       </div>
 
       <section className="mt-10 grid gap-4 lg:grid-cols-3">
@@ -1378,6 +1570,11 @@ function Footer({ navigate }) {
 
 export default function App() {
   const [route, setRoute] = useState(getInitialRoute);
+  const [cartCount, setCartCount] = useState(0);
+  const [cartModalOpen, setCartModalOpen] = useState(false);
+  const [cartModalView, setCartModalView] = useState("empty");
+  const [checkoutPlaceholderOpen, setCheckoutPlaceholderOpen] = useState(false);
+  const [lastAdded, setLastAdded] = useState(null);
 
   useEffect(() => {
     const onHashChange = () => setRoute(getInitialRoute());
@@ -1405,27 +1602,76 @@ export default function App() {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
+  const handleAddToCart = ({ quantity, color }) => {
+    setCartCount((count) => count + quantity);
+    setLastAdded({ quantity, colorLabel: color?.label || "ComfyWon" });
+    setCartModalView("added");
+    setCartModalOpen(true);
+  };
+
+  const handleCartClick = () => {
+    setCartModalView(cartCount > 0 ? "cart" : "empty");
+    setCartModalOpen(true);
+  };
+
+  const handleShopFromCart = () => {
+    setCartModalOpen(false);
+    navigate("product");
+  };
+
+  const openCheckoutPlaceholder = () => {
+    // Shopify cart redirect placeholder: replace this modal with the real Shopify cart or checkout URL later.
+    setCartModalOpen(false);
+    setCheckoutPlaceholderOpen(true);
+  };
+
+  const returnToCartFromPlaceholder = () => {
+    setCheckoutPlaceholderOpen(false);
+    setCartModalView(cartCount > 0 ? "cart" : "empty");
+    setCartModalOpen(true);
+  };
+
   return (
     <div className="min-h-screen bg-[#fff7f4] text-stone-900">
       <div className="min-h-screen w-full overflow-hidden bg-[linear-gradient(180deg,#fff9f6_0%,#ffe8ee_42%,#fffdf8_72%,#fff7f4_100%)]">
-        <Header route={route} navigate={navigate} goToSection={goToSection} />
+        <Header
+          route={route}
+          navigate={navigate}
+          goToSection={goToSection}
+          cartCount={cartCount}
+          onCartClick={handleCartClick}
+        />
         <motion.div
           key={route}
-          initial={{ opacity: 0, y: 10 }}
+          initial={{ opacity: 0.98, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35, ease: "easeOut" }}
         >
           {route === "product" ? (
-            <ProductPage navigate={navigate} />
+            <ProductPage navigate={navigate} onAddToCart={handleAddToCart} />
           ) : route === "reviews" ? (
             <ReviewsPage navigate={navigate} />
           ) : (
             <HomePage navigate={navigate} goToSection={goToSection} />
           )}
         </motion.div>
+        <CartConfirmationModal
+          isOpen={cartModalOpen}
+          cartCount={cartCount}
+          lastAdded={lastAdded}
+          view={cartModalView}
+          onClose={() => setCartModalOpen(false)}
+          onCheckout={openCheckoutPlaceholder}
+          onShop={handleShopFromCart}
+        />
+        <CheckoutPlaceholderModal
+          isOpen={checkoutPlaceholderOpen}
+          cartCount={cartCount}
+          onClose={() => setCheckoutPlaceholderOpen(false)}
+          onBackToCart={returnToCartFromPlaceholder}
+        />
         <Footer navigate={navigate} />
       </div>
     </div>
   );
 }
-

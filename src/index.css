@@ -17,12 +17,6 @@ body {
   overflow-x: hidden;
 }
 
-@media (max-width: 430px) {
-  .mobile-header-buy {
-    display: none;
-  }
-}
-
 @media (max-width: 640px) {
   .mobile-card-bound {
     width: calc(100vw - 2rem);
@@ -54,6 +48,13 @@ img {
 
 article:hover img {
   transform: scale(1.025);
+}
+
+.glow-3s {
+  color: #bd003f;
+  text-shadow:
+    0 0 10px rgba(230, 84, 120, 0.68),
+    0 0 24px rgba(189, 0, 63, 0.38);
 }
 
 @media (prefers-reduced-motion: reduce) {
