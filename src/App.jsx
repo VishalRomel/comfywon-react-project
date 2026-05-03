@@ -1,5 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { createCheckout } from "./api/checkout";
+
+const CART_STORAGE_KEY = "comfywon.cart.v1";
 
 const ICON_PATHS = {
   menu: (
@@ -204,12 +207,14 @@ const PRODUCT_COLORS = [
     label: "Blush Pink",
     swatch: "#f7a6b8",
     image: "/Listing Image 1.jpg",
+    variantId: "gid://shopify/ProductVariant/42387049185315",
   },
   {
     id: "white",
     label: "Soft White",
     swatch: "#fff8f0",
     image: "/White Listing Image 1.jpg",
+    variantId: "gid://shopify/ProductVariant/42387049218083",
   },
 ];
 
@@ -1170,13 +1175,42 @@ function BuyBox({ selectedColor, setSelectedColor, onAddToCart }) {
   );
 }
 
-function CartConfirmationModal({ isOpen, cartCount, lastAdded, view, onClose, onCheckout, onShop }) {
+function CartConfirmationModal({
+  isOpen,
+  cart = [],
+  cartCount,
+  lastAdded,
+  view,
+  onClose,
+  onCheckout,
+  onShop,
+  onUpdateLineQuantity,
+  onRemoveLine,
+  checkoutLoading = false,
+  checkoutError = "",
+}) {
   const isEmpty = cartCount === 0 || view === "empty";
   const isAdded = !isEmpty && view === "added";
+  const showLines = !isEmpty && view === "cart" && cart.length > 0;
   const itemWord = cartCount === 1 ? "item" : "items";
   const subtotal = cartCount * 30;
   const eyebrow = isEmpty ? "Cart" : isAdded ? "Added to cart" : "Your cart";
   const title = isEmpty ? "Your cart is empty." : isAdded ? "Your ComfyWon is in the cart." : "Your cart is ready.";
+  const checkoutLabel = checkoutLoading
+    ? "Redirecting to secure checkout..."
+    : isEmpty
+    ? "Shop ComfyWon"
+    : "Go to Checkout";
+  const primaryDisabled = !isEmpty && checkoutLoading;
+  const handlePrimary = () => {
+    if (primaryDisabled) return;
+    if (isEmpty) onShop();
+    else onCheckout();
+  };
+  const handleClose = () => {
+    if (checkoutLoading) return;
+    onClose();
+  };
 
   return (
     <AnimatePresence>
@@ -1186,7 +1220,7 @@ function CartConfirmationModal({ isOpen, cartCount, lastAdded, view, onClose, on
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          onClick={onClose}
+          onClick={handleClose}
         >
           <motion.div
             role="dialog"
@@ -1215,8 +1249,9 @@ function CartConfirmationModal({ isOpen, cartCount, lastAdded, view, onClose, on
                   </div>
                 </div>
                 <button
-                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-[#bd003f] shadow-sm"
-                  onClick={onClose}
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-[#bd003f] shadow-sm disabled:opacity-50"
+                  onClick={handleClose}
+                  disabled={checkoutLoading}
                   aria-label="Close cart popup"
                 >
                   <Icon name="x" size={21} />
@@ -1249,6 +1284,54 @@ function CartConfirmationModal({ isOpen, cartCount, lastAdded, view, onClose, on
                 </div>
               </div>
 
+              {showLines && (
+                <ul className="mt-4 space-y-2">
+                  {cart.map((line) => (
+                    <li
+                      key={line.variantId}
+                      className="flex items-center justify-between gap-3 rounded-[18px] border border-rose-100 bg-white p-3"
+                    >
+                      <div className="min-w-0">
+                        <p className="truncate text-[14px] font-black text-stone-900">{line.colorLabel}</p>
+                        <p className="text-[12px] font-bold text-stone-500">${line.quantity * 30}</p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="flex items-center rounded-full border border-rose-100 bg-white p-0.5">
+                          <button
+                            type="button"
+                            className="flex h-8 w-8 items-center justify-center rounded-full bg-rose-50 font-black text-[#bd003f] disabled:opacity-50"
+                            onClick={() => onUpdateLineQuantity(line.variantId, line.quantity - 1)}
+                            disabled={checkoutLoading}
+                            aria-label={`Decrease ${line.colorLabel}`}
+                          >
+                            -
+                          </button>
+                          <span className="w-8 text-center text-[14px] font-black">{line.quantity}</span>
+                          <button
+                            type="button"
+                            className="flex h-8 w-8 items-center justify-center rounded-full bg-rose-50 font-black text-[#bd003f] disabled:opacity-50"
+                            onClick={() => onUpdateLineQuantity(line.variantId, line.quantity + 1)}
+                            disabled={checkoutLoading || line.quantity >= 5}
+                            aria-label={`Increase ${line.colorLabel}`}
+                          >
+                            +
+                          </button>
+                        </div>
+                        <button
+                          type="button"
+                          className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-stone-500 shadow-sm hover:text-[#bd003f] disabled:opacity-50"
+                          onClick={() => onRemoveLine(line.variantId)}
+                          disabled={checkoutLoading}
+                          aria-label={`Remove ${line.colorLabel}`}
+                        >
+                          <Icon name="x" size={16} />
+                        </button>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              )}
+
               {!isEmpty && (
                 <p className="mt-4 rounded-[18px] bg-white p-3 text-[13px] font-bold leading-snug text-stone-600">
                   Your sale price, free shipping, and 30-day guarantee are saved in the cart.
@@ -1256,105 +1339,30 @@ function CartConfirmationModal({ isOpen, cartCount, lastAdded, view, onClose, on
               )}
             </div>
 
-            <div className="grid gap-3 p-5 sm:grid-cols-2">
-              <button
-                className="h-[52px] rounded-[18px] border-2 border-[#bd003f] bg-white px-4 py-3 text-[15px] font-black text-[#bd003f]"
-                onClick={onClose}
-              >
-                Continue Shopping
-              </button>
-              <button
-                className="h-[52px] rounded-[18px] bg-[#bd003f] px-4 py-3 text-[15px] font-black text-white shadow-[0_14px_30px_rgba(182,63,98,0.28)]"
-                onClick={isEmpty ? onShop : onCheckout}
-              >
-                {isEmpty ? "Shop ComfyWon" : "Go to Checkout"}
-              </button>
-            </div>
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
-  );
-}
-
-function CheckoutPlaceholderModal({ isOpen, cartCount, onClose, onBackToCart }) {
-  const itemWord = cartCount === 1 ? "item" : "items";
-  const subtotal = cartCount * 30;
-
-  return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          className="fixed inset-0 z-[95] flex items-end justify-center bg-[#3b0718]/40 px-4 pb-4 backdrop-blur-sm sm:items-center sm:pb-0"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          onClick={onClose}
-        >
-          <motion.div
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="checkout-placeholder-title"
-            className="w-full max-w-md overflow-hidden rounded-[30px] bg-white shadow-[0_28px_90px_rgba(70,8,29,0.30)]"
-            initial={{ opacity: 0, y: 34, scale: 0.96 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 24, scale: 0.98 }}
-            transition={{ duration: 0.24, ease: "easeOut" }}
-            onClick={(event) => event.stopPropagation()}
-          >
-            <div className="bg-[linear-gradient(135deg,#bd003f,#e65478)] p-5 text-white">
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex items-center gap-3">
-                  <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white/18 text-white shadow-lg">
-                    <Icon name="lock" size={24} />
-                  </span>
-                  <div>
-                    <p className="text-[12px] font-black uppercase tracking-[0.18em] text-white/75">
-                      Shopify checkout
-                    </p>
-                    <h2 id="checkout-placeholder-title" className="text-[25px] font-black leading-tight">
-                      Checkout placeholder
-                    </h2>
-                  </div>
-                </div>
-                <button
-                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-[#bd003f] shadow-sm"
-                  onClick={onClose}
-                  aria-label="Close checkout placeholder"
-                >
-                  <Icon name="x" size={21} />
-                </button>
-              </div>
-              <p className="mt-4 text-[14px] font-bold leading-relaxed text-white/90">
-                This is where customers will be sent to the Shopify cart once the store checkout is connected.
-              </p>
-            </div>
-
             <div className="p-5">
-              <div className="rounded-[22px] border border-rose-100 bg-[#fff7f4] p-4">
-                <div className="flex items-center justify-between gap-3">
-                  <div>
-                    <p className="text-[15px] font-black text-stone-900">Cart total</p>
-                    <p className="mt-1 text-[13px] font-bold text-stone-500">
-                      {cartCount} {itemWord} ready for checkout
-                    </p>
-                  </div>
-                  <p className="text-[26px] font-black text-[#bd003f]">${subtotal}</p>
-                </div>
-              </div>
-
-              <div className="mt-5 grid gap-3 sm:grid-cols-2">
-                <button
-                  className="h-[52px] rounded-[18px] border-2 border-[#bd003f] bg-white px-4 py-3 text-[15px] font-black text-[#bd003f]"
-                  onClick={onBackToCart}
+              {checkoutError && !checkoutLoading && (
+                <p
+                  role="alert"
+                  className="mb-3 rounded-[14px] border border-rose-200 bg-rose-50 p-3 text-[13px] font-bold text-[#bd003f]"
                 >
-                  Back to Cart
+                  {checkoutError}
+                </p>
+              )}
+              <div className="grid gap-3 sm:grid-cols-2">
+                <button
+                  className="h-[52px] rounded-[18px] border-2 border-[#bd003f] bg-white px-4 py-3 text-[15px] font-black text-[#bd003f] disabled:opacity-50"
+                  onClick={handleClose}
+                  disabled={checkoutLoading}
+                >
+                  Continue Shopping
                 </button>
                 <button
-                  className="h-[52px] rounded-[18px] bg-[#bd003f] px-4 py-3 text-[15px] font-black text-white shadow-[0_14px_30px_rgba(182,63,98,0.28)]"
-                  onClick={onClose}
+                  className="h-[52px] rounded-[18px] bg-[#bd003f] px-4 py-3 text-[15px] font-black text-white shadow-[0_14px_30px_rgba(182,63,98,0.28)] disabled:cursor-not-allowed disabled:opacity-70"
+                  onClick={handlePrimary}
+                  disabled={primaryDisabled}
+                  aria-busy={checkoutLoading}
                 >
-                  Keep Placeholder
+                  {checkoutLabel}
                 </button>
               </div>
             </div>
@@ -1568,13 +1576,39 @@ function Footer({ navigate }) {
   );
 }
 
+function loadCartFromStorage() {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = window.localStorage.getItem(CART_STORAGE_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    return parsed
+      .filter((line) => line && typeof line.variantId === "string" && Number.isFinite(line.quantity))
+      .map((line) => ({
+        variantId: line.variantId,
+        quantity: Math.max(1, Math.min(5, Math.floor(line.quantity))),
+        colorId: line.colorId || "",
+        colorLabel: line.colorLabel || "ComfyWon",
+      }));
+  } catch {
+    return [];
+  }
+}
+
 export default function App() {
   const [route, setRoute] = useState(getInitialRoute);
-  const [cartCount, setCartCount] = useState(0);
+  const [cart, setCart] = useState(loadCartFromStorage);
   const [cartModalOpen, setCartModalOpen] = useState(false);
   const [cartModalView, setCartModalView] = useState("empty");
-  const [checkoutPlaceholderOpen, setCheckoutPlaceholderOpen] = useState(false);
   const [lastAdded, setLastAdded] = useState(null);
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [checkoutError, setCheckoutError] = useState("");
+
+  const cartCount = useMemo(
+    () => cart.reduce((total, line) => total + line.quantity, 0),
+    [cart],
+  );
 
   useEffect(() => {
     const onHashChange = () => setRoute(getInitialRoute());
@@ -1585,6 +1619,20 @@ export default function App() {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "auto" });
   }, [route]);
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
+    } catch {
+      // ignore storage errors (e.g. private mode)
+    }
+  }, [cart]);
+
+  useEffect(() => {
+    if (cart.length === 0 && cartModalView === "cart") {
+      setCartModalView("empty");
+    }
+  }, [cart, cartModalView]);
 
   const navigate = (nextRoute) => {
     setRoute(nextRoute);
@@ -1603,14 +1651,36 @@ export default function App() {
   };
 
   const handleAddToCart = ({ quantity, color }) => {
-    setCartCount((count) => count + quantity);
-    setLastAdded({ quantity, colorLabel: color?.label || "ComfyWon" });
+    if (!color?.variantId) return;
+    const safeQty = Math.max(1, Math.min(5, Math.floor(quantity) || 1));
+    setCart((current) => {
+      const existing = current.find((line) => line.variantId === color.variantId);
+      if (existing) {
+        return current.map((line) =>
+          line.variantId === color.variantId
+            ? { ...line, quantity: Math.min(5, line.quantity + safeQty) }
+            : line,
+        );
+      }
+      return [
+        ...current,
+        {
+          variantId: color.variantId,
+          quantity: safeQty,
+          colorId: color.id,
+          colorLabel: color.label,
+        },
+      ];
+    });
+    setLastAdded({ quantity: safeQty, colorLabel: color?.label || "ComfyWon" });
+    setCheckoutError("");
     setCartModalView("added");
     setCartModalOpen(true);
   };
 
   const handleCartClick = () => {
     setCartModalView(cartCount > 0 ? "cart" : "empty");
+    setCheckoutError("");
     setCartModalOpen(true);
   };
 
@@ -1619,16 +1689,48 @@ export default function App() {
     navigate("product");
   };
 
-  const openCheckoutPlaceholder = () => {
-    // Shopify cart redirect placeholder: replace this modal with the real Shopify cart or checkout URL later.
-    setCartModalOpen(false);
-    setCheckoutPlaceholderOpen(true);
+  const handleUpdateLineQuantity = (variantId, nextQuantity) => {
+    const clamped = Math.max(0, Math.min(5, Math.floor(nextQuantity) || 0));
+    if (clamped === 0) {
+      setCart((current) => current.filter((line) => line.variantId !== variantId));
+      return;
+    }
+    setCart((current) =>
+      current.map((line) =>
+        line.variantId === variantId ? { ...line, quantity: clamped } : line,
+      ),
+    );
   };
 
-  const returnToCartFromPlaceholder = () => {
-    setCheckoutPlaceholderOpen(false);
-    setCartModalView(cartCount > 0 ? "cart" : "empty");
-    setCartModalOpen(true);
+  const handleRemoveLine = (variantId) => {
+    setCart((current) => current.filter((line) => line.variantId !== variantId));
+  };
+
+  const handleCheckout = async () => {
+    if (checkoutLoading) return;
+    if (cart.length === 0) return;
+    setCheckoutLoading(true);
+    setCheckoutError("");
+    try {
+      const items = cart.map((line) => ({
+        variantId: line.variantId,
+        quantity: line.quantity,
+      }));
+      const data = await createCheckout(items);
+      if (!data?.checkoutUrl) {
+        throw new Error("Checkout failed. Please try again.");
+      }
+      window.location.href = data.checkoutUrl;
+    } catch (err) {
+      setCheckoutError(err?.message || "Checkout failed. Please try again.");
+      setCheckoutLoading(false);
+    }
+  };
+
+  const handleCloseCartModal = () => {
+    if (checkoutLoading) return;
+    setCartModalOpen(false);
+    setCheckoutError("");
   };
 
   return (
@@ -1657,18 +1759,17 @@ export default function App() {
         </motion.div>
         <CartConfirmationModal
           isOpen={cartModalOpen}
+          cart={cart}
           cartCount={cartCount}
           lastAdded={lastAdded}
           view={cartModalView}
-          onClose={() => setCartModalOpen(false)}
-          onCheckout={openCheckoutPlaceholder}
+          onClose={handleCloseCartModal}
+          onCheckout={handleCheckout}
           onShop={handleShopFromCart}
-        />
-        <CheckoutPlaceholderModal
-          isOpen={checkoutPlaceholderOpen}
-          cartCount={cartCount}
-          onClose={() => setCheckoutPlaceholderOpen(false)}
-          onBackToCart={returnToCartFromPlaceholder}
+          onUpdateLineQuantity={handleUpdateLineQuantity}
+          onRemoveLine={handleRemoveLine}
+          checkoutLoading={checkoutLoading}
+          checkoutError={checkoutError}
         />
         <Footer navigate={navigate} />
       </div>
