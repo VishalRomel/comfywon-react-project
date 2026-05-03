@@ -3,6 +3,16 @@ import { AnimatePresence, motion } from "framer-motion";
 import { createCheckout } from "./api/checkout";
 
 const CART_STORAGE_KEY = "comfywon.cart.v1";
+const SHOPIFY_STORE_HOST = "comfywon.myshopify.com";
+
+function isSafeCheckoutUrl(url) {
+  try {
+    const parsed = new URL(url);
+    return parsed.protocol === "https:" && parsed.hostname.toLowerCase() === SHOPIFY_STORE_HOST;
+  } catch {
+    return false;
+  }
+}
 
 const ICON_PATHS = {
   menu: (
@@ -1717,7 +1727,7 @@ export default function App() {
         quantity: line.quantity,
       }));
       const data = await createCheckout(items);
-      if (!data?.checkoutUrl) {
+      if (!data?.checkoutUrl || !isSafeCheckoutUrl(data.checkoutUrl)) {
         throw new Error("Checkout failed. Please try again.");
       }
       window.location.href = data.checkoutUrl;

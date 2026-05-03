@@ -19,6 +19,7 @@ class Settings:
     ]
 
     MAX_CHECKOUT_QUANTITY: int = int(os.getenv("MAX_CHECKOUT_QUANTITY", "5"))
+    MAX_CART_TOTAL_QUANTITY: int = int(os.getenv("MAX_CART_TOTAL_QUANTITY", "20"))
 
     ALLOWED_VARIANTS: dict[str, str] = {
         "gid://shopify/ProductVariant/42387049185315": "Pink variant",

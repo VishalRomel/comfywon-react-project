@@ -1,4 +1,6 @@
 import logging
+from urllib.parse import urlparse
+
 import httpx
 
 from .config import settings
@@ -96,5 +98,21 @@ async def create_cart(items: list[dict]) -> str:
         logger.error("Shopify cartCreate returned no checkoutUrl")
         raise ShopifyError("Shopify did not return a checkout URL")
 
+    if not _is_safe_shopify_url(checkout_url):
+        logger.error("Shopify returned unexpected checkoutUrl host")
+        raise ShopifyError("Unexpected checkout URL")
+
     logger.info("checkout creation succeeded")
     return checkout_url
+
+
+def _is_safe_shopify_url(url: str) -> bool:
+    """Only allow redirecting users to HTTPS URLs on this store's host."""
+    try:
+        parsed = urlparse(url)
+    except ValueError:
+        return False
+    if parsed.scheme != "https":
+        return False
+    host = (parsed.hostname or "").lower()
+    return host == settings.SHOPIFY_STORE_DOMAIN.lower()
