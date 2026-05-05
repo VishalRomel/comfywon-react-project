@@ -91,8 +91,8 @@ fly secrets set MAX_CHECKOUT_QUANTITY=5
 # After Vercel assigns the project URL:
 fly secrets set FRONTEND_ORIGINS=https://comfywon.vercel.app
 
-# Once you buy comfywon.com and point it at Vercel:
-fly secrets set FRONTEND_ORIGINS=https://comfywon.com,https://www.comfywon.com,https://comfywon.vercel.app
+# Production origins (current):
+fly secrets set FRONTEND_ORIGINS=https://shopcomfywon.com,https://www.shopcomfywon.com,https://comfywon-comfytemp-project.vercel.app
 ```
 
 ### Frontend → Vercel
@@ -113,15 +113,15 @@ fly secrets set FRONTEND_ORIGINS=https://comfywon.com,https://www.comfywon.com,h
 
 ### Custom domain (whenever you're ready)
 
-You don't need a custom domain to launch — `comfywon.vercel.app` works for real customers and real Shopify checkouts. When you're ready to use `comfywon.com`:
+Currently live at **<https://shopcomfywon.com>** (with `www.shopcomfywon.com` redirecting to apex). To swap or add another domain in the future:
 
-1. Buy it from any registrar (Namecheap, Cloudflare, Porkbun, Google Domains successor, etc.).
-2. In Vercel → **Settings → Domains** → Add `comfywon.com` and `www.comfywon.com`. Vercel shows you the DNS records to set at your registrar.
-3. Set DNS at the registrar (Vercel's instructions are exact). Propagation: a few minutes to a few hours.
-4. Update Fly's `FRONTEND_ORIGINS` to add the new domains (see the second `fly secrets set` example above).
+1. Buy it from any registrar (Cloudflare, Namecheap, Porkbun).
+2. In Vercel → **Settings → Domains** → Add the apex + `www.` versions.
+3. Set the DNS records Vercel provides at your registrar.
+4. Update Fly's `FRONTEND_ORIGINS` to include the new domains (see `fly secrets set` example above).
 5. Test checkout from the new domain.
 
-No frontend code changes needed.
+No frontend code changes needed when changing the customer-facing domain — the constant `SHOPIFY_STORE_HOST` in `src/App.jsx` only refers to where Shopify hosts the checkout (`comfywon.myshopify.com`), which stays the same.
 
 ## Manual Shopify / Amazon MCF setup (required before launch)
 

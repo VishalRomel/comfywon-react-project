@@ -228,11 +228,22 @@ const PRODUCT_COLORS = [
   },
 ];
 
+const REVIEW_TOTAL = 2932;
+const REVIEW_RATING = "4.8";
+const PRODUCT_PRICE_CENTS = 3299;
+const RETAIL_PRICE_CENTS = PRODUCT_PRICE_CENTS * 2;
+const PRODUCT_PRICE_LABEL = `$${(PRODUCT_PRICE_CENTS / 100).toFixed(2)}`;
+const RETAIL_PRICE_LABEL = `$${(RETAIL_PRICE_CENTS / 100).toFixed(2)}`;
+
+function formatPriceFromCents(cents) {
+  return `$${(cents / 100).toFixed(2)}`;
+}
+
 const FEATURES = [
   {
     icon: "check",
-    title: "Adjustable Stretchy Waistband",
-    text: "Made to fit all sizes with a soft flexible band.",
+    title: "Stretchy Waistband",
+    text: "Soft, flexible comfort made to move with your body.",
   },
   {
     icon: "thermometer",
@@ -247,25 +258,25 @@ const FEATURES = [
   {
     icon: "battery",
     title: "Cordless & Rechargeable",
-    text: "USB-C rechargeable warmth without wall cords.",
+    text: "Rechargeable warmth without wall cords.",
   },
 ];
 
 const HOW_STEPS = [
   {
     number: "01",
-    title: "Wrap",
-    text: "Fasten the soft adjustable belt over your lower belly or back.",
+    title: "Hold power 3 seconds",
+    text: "Press and hold the power button for 3 seconds to turn ComfyWon on.",
   },
   {
     number: "02",
-    title: "Warm",
-    text: "Choose one of five heat levels and let comfort build quickly.",
+    title: "Increase heat",
+    text: "Press the heating button to move through the warmth levels until it feels right.",
   },
   {
     number: "03",
-    title: "Move",
-    text: "Go cordless at home, work, in the car, or while resting.",
+    title: "Switch massage",
+    text: "Press the massage button to change vibration modes for extra cramp comfort.",
   },
 ];
 
@@ -287,6 +298,18 @@ const LIFESTYLE_CARDS = [
     title: "While Resting",
     text: "A calmer way to settle in when cramps interrupt your evening.",
     image: "/1.png",
+  },
+  {
+    icon: "heart",
+    title: "Errands & School",
+    text: "Cordless heat you can wear while you keep moving through a busy day.",
+    image: "/Listing Image 8.jpg",
+  },
+  {
+    icon: "truck",
+    title: "Travel Days",
+    text: "Keep soothing warmth close in a bag, suitcase, desk drawer, or car.",
+    image: "/Listing Image 9.jpg",
   },
 ];
 
@@ -311,18 +334,12 @@ const PAIN_RELIEF = [
   },
 ];
 
-const KIT_ITEMS = [
-  { icon: "package", title: "Heating Belt", text: "Adjustable wearable warmer" },
-  { icon: "battery", title: "USB-C Cable", text: "Fast charging cord included" },
-  { icon: "gift", title: "Storage Pouch", text: "Soft pouch for travel" },
-  { icon: "shield", title: "Quick Guide", text: "Simple setup and care" },
-];
-
 const REVIEWS = [
   {
     name: "Jessica M.",
     title: "A lifesaver on day one",
     body: "The heat comes on fast and the massage makes it easier to keep working instead of curling up in bed. I love that I can walk around with it.",
+    rating: 5,
     color: "Blush Pink",
     date: "April 18, 2026",
     helpful: 214,
@@ -332,6 +349,7 @@ const REVIEWS = [
     name: "Amanda R.",
     title: "Finally cordless comfort",
     body: "I bought this for cramps and now use it for back tension too. The strap is comfortable, it stays in place, and the battery lasted through my evening.",
+    rating: 5,
     color: "Soft White",
     date: "April 12, 2026",
     helpful: 179,
@@ -340,7 +358,8 @@ const REVIEWS = [
   {
     name: "Olivia T.",
     title: "Soft, warm, and easy",
-    body: "The plush side feels really gentle. The controls are simple and the auto shut-off lets me relax without checking the timer every few minutes.",
+    body: "The plush side feels really gentle. The controls are simple and the heat feels steady without being too bulky.",
+    rating: 5,
     color: "Blush Pink",
     date: "April 8, 2026",
     helpful: 136,
@@ -348,8 +367,9 @@ const REVIEWS = [
   },
   {
     name: "Nina P.",
-    title: "Great for my office days",
-    body: "This is the first warmer I can actually use at my desk. It fits under a cardigan and does not need to stay plugged into the wall.",
+    title: "Easy to move around with",
+    body: "Love the product, works exactly as described. It is a little smaller than I thought, but that is actually good because it is easy to move around with.",
+    rating: 4,
     color: "Blush Pink",
     date: "March 31, 2026",
     helpful: 118,
@@ -358,7 +378,8 @@ const REVIEWS = [
   {
     name: "Carmen L.",
     title: "Gifted one to my sister",
-    body: "I got one for myself and ordered another for my sister after she tried it. It feels much more premium than the heating pads I used before.",
+    body: "I got one for myself and ordered another for my sister after she tried it. It feels much more comfortable than the heating pads I used before.",
+    rating: 5,
     color: "Soft White",
     date: "March 23, 2026",
     helpful: 94,
@@ -367,11 +388,212 @@ const REVIEWS = [
   {
     name: "Brianna S.",
     title: "Worth it at the sale price",
-    body: "The 5 heat settings make a real difference because I can start warmer and turn it down later. Shipping was quick and the pouch is useful.",
+    body: "The 5 heat settings make a real difference because I can start warmer and turn it down later. Shipping was quick too.",
+    rating: 5,
     color: "Blush Pink",
     date: "March 16, 2026",
     helpful: 88,
     image: "/Listing Image 1.jpg",
+  },
+  {
+    name: "Maya K.",
+    title: "Perfect for cramps",
+    body: "I use it on the first two days of my cycle and it helps me stay comfortable.",
+    rating: 5,
+    color: "Soft White",
+    date: "March 10, 2026",
+    helpful: 76,
+    image: "/White Listing Image 2.jpg",
+  },
+  {
+    name: "Sofia G.",
+    title: "Great warmth",
+    body: "It heats quickly and the strap stays put while I am walking around.",
+    rating: 5,
+    color: "Blush Pink",
+    date: "March 5, 2026",
+    helpful: 69,
+    image: "/Listing Image 3.jpg",
+  },
+  {
+    name: "Kayla D.",
+    title: "Small but helpful",
+    body: "The size makes it easy to wear under loose clothes and the heat feels focused.",
+    rating: 4,
+    color: "Soft White",
+    date: "February 28, 2026",
+    helpful: 61,
+    image: "/White Listing Image 4.jpg",
+  },
+  {
+    name: "Tiana B.",
+    title: "My desk drawer essential",
+    body: "I keep it at work now because it is much easier than using a plug-in pad.",
+    rating: 5,
+    color: "Blush Pink",
+    date: "February 21, 2026",
+    helpful: 57,
+    image: "/Listing Image 5.jpg",
+  },
+  {
+    name: "Rachel N.",
+    title: "Comfortable strap",
+    body: "The waistband stretches nicely and does not dig into my stomach.",
+    rating: 5,
+    color: "Soft White",
+    date: "February 18, 2026",
+    helpful: 52,
+    image: "/White Listing Image 5.jpg",
+  },
+  {
+    name: "Jada W.",
+    title: "Really easy controls",
+    body: "Power, heat, massage, done. I did not need to read much to use it.",
+    rating: 5,
+    color: "Blush Pink",
+    date: "February 11, 2026",
+    helpful: 48,
+    image: "/Listing Image 2.jpg",
+  },
+  {
+    name: "Emily C.",
+    title: "Good for travel",
+    body: "I packed it for a weekend trip and it was easy to charge and wear.",
+    rating: 5,
+    color: "Soft White",
+    date: "February 4, 2026",
+    helpful: 43,
+    image: "/White Listing Image 8.jpg",
+  },
+  {
+    name: "Ari L.",
+    title: "Strong heat options",
+    body: "I like that there are lower settings for resting and higher ones for rough cramps.",
+    rating: 5,
+    color: "Blush Pink",
+    date: "January 29, 2026",
+    helpful: 39,
+    image: "/Listing Image 6.jpg",
+  },
+  {
+    name: "Leah F.",
+    title: "Nice for back tension",
+    body: "I bought it for cramps but use it on my lower back after long shifts.",
+    rating: 5,
+    color: "Soft White",
+    date: "January 22, 2026",
+    helpful: 35,
+    image: "/White Listing Image 6.jpg",
+  },
+  {
+    name: "Vanessa R.",
+    title: "Comfort without cords",
+    body: "Being cordless is the whole reason I reach for this instead of my old pad.",
+    rating: 5,
+    color: "Blush Pink",
+    date: "January 16, 2026",
+    helpful: 31,
+    image: "/Listing Image 4.jpg",
+  },
+  {
+    name: "Priya S.",
+    title: "A little snug at first",
+    body: "It took a minute to adjust the strap, but once it was set it felt great.",
+    rating: 4,
+    color: "Soft White",
+    date: "January 9, 2026",
+    helpful: 27,
+    image: "/White Listing Image 7.jpg",
+  },
+  {
+    name: "Lauren H.",
+    title: "Fast shipping",
+    body: "It arrived quickly and was ready to use after charging.",
+    rating: 5,
+    color: "Blush Pink",
+    date: "January 3, 2026",
+    helpful: 24,
+    image: "/Listing Image 1.jpg",
+  },
+  {
+    name: "Monica P.",
+    title: "Soft fabric",
+    body: "The part that touches your skin is soft and comfortable for long wear.",
+    rating: 5,
+    color: "Soft White",
+    date: "December 28, 2025",
+    helpful: 22,
+    image: "/White Listing Image 3.jpg",
+  },
+  {
+    name: "Grace E.",
+    title: "Helpful on busy days",
+    body: "I can do chores and still get heat where I need it.",
+    rating: 5,
+    color: "Blush Pink",
+    date: "December 20, 2025",
+    helpful: 19,
+    image: "/Listing Image 8.jpg",
+  },
+  {
+    name: "Dani A.",
+    title: "Exactly what I needed",
+    body: "Simple, warm, and easy to wear around the house.",
+    rating: 5,
+    color: "Soft White",
+    date: "December 13, 2025",
+    helpful: 17,
+    image: "/White Listing Image 1.jpg",
+  },
+  {
+    name: "Kara V.",
+    title: "Good heat coverage",
+    body: "The warmth lands right where my cramps usually hit.",
+    rating: 5,
+    color: "Blush Pink",
+    date: "December 7, 2025",
+    helpful: 15,
+    image: "/Period Cramp Pain.png",
+  },
+  {
+    name: "Hannah J.",
+    title: "Worth buying",
+    body: "The massage mode is gentle and makes the heat feel even better.",
+    rating: 5,
+    color: "Soft White",
+    date: "November 30, 2025",
+    helpful: 12,
+    image: "/White Listing Image 9.jpg",
+  },
+  {
+    name: "Ivy M.",
+    title: "Great little warmer",
+    body: "It is lightweight and easy to carry from room to room.",
+    rating: 5,
+    color: "Blush Pink",
+    date: "November 22, 2025",
+    helpful: 11,
+    image: "/Listing Image 9.jpg",
+  },
+  {
+    name: "Noelle T.",
+    title: "My period bag staple",
+    body: "I keep it charged before my cycle and it has made rough mornings easier.",
+    rating: 5,
+    color: "Soft White",
+    date: "November 15, 2025",
+    helpful: 9,
+    image: "/White Listing Image 2.jpg",
+  },
+  {
+    name: "Selena Q.",
+    title: "Very convenient",
+    body: "No cord means I can make tea, sit down, and move around without unplugging.",
+    rating: 5,
+    color: "Blush Pink",
+    date: "November 8, 2025",
+    helpful: 8,
+    image: "/Listing Image 7.jpg",
   },
 ];
 
@@ -385,10 +607,56 @@ const REVIEW_MEDIA = [
 ];
 
 const TRUST_BADGES = [
-  { icon: "truck", text: "Fast free shipping" },
-  { icon: "rotate", text: "30-day money-back guarantee" },
-  { icon: "shield", text: "1-year warranty" },
-  { icon: "lock", text: "Secure checkout" },
+  { icon: "truck", text: "Free shipping" },
+  { icon: "rotate", text: "30 day refund or replacement" },
+  { icon: "clock", text: "2 day shipping" },
+  { icon: "gift", text: "Huge sale" },
+];
+
+const PRODUCT_ABOUT_ITEMS = [
+  {
+    title: "Cordless, rechargeable comfort",
+    text: "Designed for period cramps, lower abdominal tension, winter warmth, and everyday comfort without staying plugged into a wall.",
+  },
+  {
+    title: "Wearable fit",
+    text: "A slim, lightweight body and stretchy waistband keep targeted warmth close to the lower belly or back while you rest, work, or move around.",
+  },
+  {
+    title: "5 heat levels plus vibration",
+    text: "Choose from five heat levels up to about 140F and switch massage modes when you want extra relaxation.",
+  },
+  {
+    title: "Soft flannel contact",
+    text: "The skin-friendly flannel surface feels gentle against the body for comfortable wear during cramps or daily routines.",
+  },
+  {
+    title: "Portable for home, work, or travel",
+    text: "Compact enough for a bag, desk drawer, suitcase, or bedside table so warmth is close when your period starts.",
+  },
+];
+
+const FAQ_ITEMS = [
+  {
+    question: "What if my item arrives damaged or does not work?",
+    answer: "Reach out with your order details and a photo or short description of the issue. Damaged or non-working arrivals can be replaced or refunded under the refund and replacement policy.",
+  },
+  {
+    question: "How do I turn ComfyWon on?",
+    answer: "Press and hold the power button for 3 seconds. Then press the heating button to increase heat or the massage button to switch vibration modes.",
+  },
+  {
+    question: "How long does the battery last?",
+    answer: "Battery life depends on the heat and massage settings, but it can run up to 3 hours on a charge.",
+  },
+  {
+    question: "Can I wear it while walking around?",
+    answer: "Yes. The cordless design and stretchy waistband are made for light movement at home, work, school, errands, or travel.",
+  },
+  {
+    question: "Is shipping free?",
+    answer: "Yes. The current sale includes free shipping and the site highlights 2 day shipping where available.",
+  },
 ];
 
 function getInitialRoute() {
@@ -397,19 +665,24 @@ function getInitialRoute() {
   return ["home", "product", "reviews"].includes(hash) ? hash : "home";
 }
 
-function useCountdown(totalSeconds = 2 * 60 * 60 + 20 * 60) {
-  const [targetTime] = useState(() => Date.now() + totalSeconds * 1000);
-  const [remaining, setRemaining] = useState(totalSeconds);
+function getDealSecondsRemaining() {
+  const now = new Date();
+  const nextReset = new Date(now);
+  nextReset.setMinutes(0, 0, 0);
+  nextReset.setHours(Math.floor(now.getHours() / 2) * 2 + 2);
+  return Math.max(0, Math.floor((nextReset.getTime() - now.getTime()) / 1000));
+}
+
+function useCountdown() {
+  const [remaining, setRemaining] = useState(getDealSecondsRemaining);
 
   useEffect(() => {
-    const tick = () => {
-      setRemaining(Math.max(0, Math.floor((targetTime - Date.now()) / 1000)));
-    };
+    const tick = () => setRemaining(getDealSecondsRemaining());
 
     tick();
     const timer = window.setInterval(tick, 1000);
     return () => window.clearInterval(timer);
-  }, [targetTime]);
+  }, []);
 
   const hours = Math.floor(remaining / 3600);
   const minutes = Math.floor((remaining % 3600) / 60);
@@ -438,11 +711,35 @@ function Reveal({ as = "div", children, className = "", delay = 0 }) {
   );
 }
 
-function Stars({ size = 17 }) {
+function Stars({ size = 17, rating = 5 }) {
   return (
-    <div className="flex items-center gap-0.5 text-amber-400" aria-label="5 star rating">
+    <div className="flex items-center gap-0.5 text-amber-400" aria-label={`${rating} star rating`}>
       {[1, 2, 3, 4, 5].map((item) => (
-        <Icon key={item} name="star" size={size} fill="currentColor" strokeWidth={0} />
+        <Icon
+          key={item}
+          name="star"
+          size={size}
+          fill={item <= Math.floor(rating) ? "currentColor" : "none"}
+          strokeWidth={item <= Math.floor(rating) ? 0 : 2}
+        />
+      ))}
+    </div>
+  );
+}
+
+function ReviewFaces({ size = "md" }) {
+  const initials = ["J", "A", "O", "N"];
+  const avatarClass = size === "sm" ? "h-6 w-6 text-[10px]" : "h-8 w-8 text-[12px]";
+
+  return (
+    <div className="flex -space-x-2" aria-hidden="true">
+      {initials.map((initial) => (
+        <span
+          key={initial}
+          className={`${avatarClass} flex items-center justify-center rounded-full border-2 border-white bg-[#bd003f] font-black text-white shadow-sm`}
+        >
+          {initial}
+        </span>
       ))}
     </div>
   );
@@ -535,7 +832,7 @@ function Header({ route, navigate, goToSection, cartCount, onCartClick }) {
               className="rounded-full bg-[#bd003f] px-4 py-3 text-left text-[15px] font-black text-white"
               onClick={() => runNav(() => navigate("product"))}
             >
-              Shop ComfyWon - $30
+              Shop ComfyWon - {PRODUCT_PRICE_LABEL}
             </button>
           </div>
         </div>
@@ -566,7 +863,7 @@ function Hero({ navigate, goToSection }) {
           <div className="relative z-30 flex min-h-[510px] flex-col justify-start px-1 pb-4 pt-6 sm:pt-8 lg:min-h-[700px] lg:w-[56%] lg:justify-center lg:pb-10">
             <div className="mb-3 inline-flex w-fit items-center gap-2 rounded-full border border-rose-200 bg-white/75 px-4 py-2 text-[13px] font-extrabold text-rose-500 shadow-sm backdrop-blur">
               <Icon name="flame" size={16} />
-              Cordless Heating Belt
+              Cordless Period Heating Pad
             </div>
 
             <h1 className="max-w-[335px] font-serif text-[38px] font-black leading-[0.94] tracking-tight text-[#bd003f] sm:max-w-[475px] sm:text-[57px] lg:max-w-[640px] lg:text-[82px]">
@@ -582,10 +879,24 @@ function Hero({ navigate, goToSection }) {
               Cordless freedom. All-day comfort.
             </p>
 
+            <div className="mt-4 flex flex-wrap items-center gap-2 text-[12px] font-black text-stone-700 sm:text-[13px]">
+              <span className="inline-flex items-center gap-1 rounded-full bg-white/80 px-3 py-2 shadow-sm backdrop-blur">
+                <Icon name="truck" size={15} className="text-[#bd003f]" />
+                Free shipping
+              </span>
+              <span className="inline-flex items-center gap-1 rounded-full bg-white/80 px-3 py-2 shadow-sm backdrop-blur">
+                <Icon name="clock" size={15} className="text-[#bd003f]" />
+                2 day shipping
+              </span>
+            </div>
+
             <div className="mt-4">
               <div className="flex flex-wrap items-center gap-3">
+                <ReviewFaces />
                 <Stars size={20} />
-                <span className="text-[17px] font-black text-stone-900">4.9/5</span>
+                <span className="text-[17px] font-black text-stone-900">
+                  {REVIEW_RATING}/5 | {REVIEW_TOTAL.toLocaleString()} reviews
+                </span>
               </div>
               <button
                 className="mt-2 rounded-full bg-white/75 px-3 py-1.5 text-[13px] font-black text-[#bd003f] underline-offset-4 shadow-sm hover:underline"
@@ -598,8 +909,8 @@ function Hero({ navigate, goToSection }) {
             <div className="mt-4 flex flex-wrap items-center gap-2 text-[13px] font-bold text-stone-700 sm:text-[14px]">
               <span className="rounded-full bg-[#fce7b1] px-3 py-1 text-[#7a4b00]">50% off</span>
               <span>
-                <span className="text-stone-400 line-through">$60</span>{" "}
-                <span className="text-[#bd003f]">$30</span>
+                <span className="text-stone-400 line-through">{RETAIL_PRICE_LABEL}</span>{" "}
+                <span className="text-[#bd003f]">{PRODUCT_PRICE_LABEL}</span>
               </span>
               <span className="rounded-full bg-white/75 px-3 py-1 text-[#bd003f]">
                 Ends in {countdown.hours}:{countdown.minutes}:{countdown.seconds}
@@ -610,17 +921,10 @@ function Hero({ navigate, goToSection }) {
               className="mt-4 flex h-[56px] w-full max-w-[520px] items-center justify-center gap-4 rounded-full bg-gradient-to-r from-[#e65478] to-[#c40042] text-[19px] font-black text-white shadow-[0_16px_32px_rgba(190,52,89,0.32)] active:scale-[0.99] sm:h-[62px] sm:text-[22px]"
               onClick={() => navigate("product")}
             >
-              Buy Now - $30
+              Buy Now - {PRODUCT_PRICE_LABEL}
               <span className="flex h-10 w-10 items-center justify-center rounded-full border border-white/70">
                 <Icon name="arrow" size={23} />
               </span>
-            </button>
-
-            <button
-              className="mt-3 flex h-[54px] w-full max-w-[520px] items-center justify-center gap-3 rounded-full border-2 border-rose-300/70 bg-white/70 text-[18px] font-black text-[#bd003f] shadow-sm backdrop-blur active:scale-[0.99] sm:h-[58px] sm:text-[20px]"
-              onClick={() => goToSection("how-it-works")}
-            >
-              How It Works <Icon name="play" size={22} />
             </button>
           </div>
         </div>
@@ -655,24 +959,52 @@ function FeaturesStrip() {
 
 function HowItWorks() {
   return (
-    <section className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
-      <div className="rounded-[30px] border border-rose-100 bg-white/78 p-4 shadow-[0_18px_45px_rgba(175,64,94,0.10)] lg:p-7">
-        <div className="grid gap-4 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
-          <SectionHeading
-            align="left"
-            eyebrow="How it works"
-            title="Comfort in three taps."
-            text="Simple controls make it easy to get the warmth you want without cords or bulky pads."
-          />
-          <div className="grid gap-3 sm:grid-cols-3">
-            {HOW_STEPS.map((step) => (
-              <div key={step.number} className="rounded-[22px] bg-[#fff6f3] p-4">
-                <p className="text-[12px] font-black text-rose-400">{step.number}</p>
-                <h3 className="mt-1 text-[20px] font-black text-[#bd003f]">{step.title}</h3>
-                <p className="mt-2 text-[14px] leading-snug text-stone-600">{step.text}</p>
-              </div>
-            ))}
+    <section id="how-it-works" className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
+      <div className="overflow-hidden rounded-[34px] bg-[linear-gradient(135deg,#9b0035,#e65478)] p-5 text-white shadow-[0_26px_70px_rgba(168,23,73,0.26)] lg:p-8">
+        <div className="grid gap-6 lg:grid-cols-[0.92fr_1.08fr] lg:items-center">
+          <div>
+            <p className="text-[13px] font-black uppercase tracking-[0.18em] text-white/80">How it works</p>
+            <h2 className="mt-2 font-serif text-[34px] font-black leading-[0.98] tracking-tight sm:text-[50px]">
+              Heat and massage where cramps hit.
+            </h2>
+            <p className="mt-4 max-w-xl text-[15px] font-semibold leading-relaxed text-white/88 sm:text-[18px]">
+              Targeted warmth helps relax the lower belly while gentle vibration adds another layer of comfort when cramps start to interrupt your day.
+            </p>
           </div>
+
+          <div className="rounded-[26px] bg-white/12 p-3 backdrop-blur">
+            <p className="px-2 pb-3 text-[14px] font-black text-white">
+              See the product from a customer perspective
+            </p>
+            <div className="relative min-h-[285px] overflow-hidden rounded-[22px] bg-stone-950">
+              <img src="/Listing Image 2.jpg" alt="ComfyWon product video preview" className="h-full min-h-[285px] w-full object-cover opacity-70" />
+              <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
+                <span className="flex h-16 w-16 items-center justify-center rounded-full bg-white/90 text-[#bd003f] shadow-xl">
+                  <Icon name="play" size={25} fill="currentColor" strokeWidth={0} />
+                </span>
+                <p className="mt-3 text-[15px] font-black">Video placeholder</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-6 grid gap-3 sm:grid-cols-3">
+          {HOW_STEPS.map((step, index) => (
+            <motion.div
+              key={step.number}
+              className="rounded-[22px] bg-white/13 p-4 backdrop-blur"
+              initial={{ opacity: 0, y: 18, scale: 0.98 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: true, amount: 0.45 }}
+              transition={{ duration: 0.45, ease: "easeOut", delay: index * 0.08 }}
+            >
+              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-[12px] font-black text-[#bd003f] shadow-sm">
+                {step.number}
+              </span>
+              <h3 className="mt-3 text-[18px] font-black text-white">{step.title}</h3>
+              <p className="mt-2 text-[14px] font-semibold leading-snug text-white/82">{step.text}</p>
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>
@@ -703,11 +1035,11 @@ function ComfortSection() {
     <section id="benefits" className="relative mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
       <SectionHeading
         eyebrow="Comfort that moves with you"
-        title="Relief that fits real life."
+        title="Carry on your day pain free."
         text="Wear it when your day will not pause for cramps, tension, or that heavy lower-belly ache."
       />
 
-      <div className="no-scrollbar -mx-4 mt-6 flex snap-x gap-4 overflow-x-auto px-4 pb-2 sm:-mx-6 sm:px-6 lg:mx-0 lg:grid lg:grid-cols-3 lg:overflow-visible lg:px-0">
+      <div className="no-scrollbar -mx-4 mt-6 flex snap-x gap-4 overflow-x-auto px-4 pb-2 sm:-mx-6 sm:px-6 lg:mx-0 lg:grid lg:grid-cols-5 lg:overflow-visible lg:px-0">
         {LIFESTYLE_CARDS.map((card) => (
           <LifestyleCard key={card.title} {...card} />
         ))}
@@ -721,12 +1053,6 @@ function PainCard({ label, title, text, image }) {
     <Reveal as="article" className="min-w-[76%] snap-start overflow-hidden rounded-[24px] border border-rose-100 bg-white shadow-[0_18px_42px_rgba(178,75,98,0.13)] sm:min-w-[310px] lg:min-w-0">
       <div className="relative h-52 overflow-hidden bg-rose-50 sm:h-56 lg:h-60">
         <img src={image} alt={title} className="h-full w-full object-cover" />
-        <span className="absolute left-4 top-4 rounded-full bg-[#bd003f] px-3 py-1 text-[12px] font-black text-white shadow-lg">
-          {label}
-        </span>
-        <span className="absolute bottom-4 right-4 flex h-11 w-11 items-center justify-center rounded-full border-2 border-white bg-[#e65478] text-white shadow-lg">
-          <Icon name="play" size={18} fill="currentColor" strokeWidth={0} />
-        </span>
       </div>
       <div className="p-4">
         <h3 className="text-[18px] font-black text-[#bd003f]">{title}</h3>
@@ -738,17 +1064,19 @@ function PainCard({ label, title, text, image }) {
 
 function PainReliefSection() {
   return (
-    <section id="how-it-works" className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
+    <section className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
       <SectionHeading
         eyebrow="Targeted warmth"
         title={
           <>
-            <span className="glow-3s block sm:inline">3s Heating</span>{" "}
+            <span className="pulse-3s inline-block text-[#bd003f]">
+              3s Heating
+            </span>{" "}
             <span className="block sm:inline">Rapid Pain Relief</span>{" "}
             {/* <span className="block sm:inline">kind of rough day.</span> */}
           </>
         }
-        text="Swipe on phone to scan the three most common ways women use ComfyWon, or compare them side by side on desktop."
+        text="Choose the spot that needs comfort most, then let fast heat and gentle vibration help you get through cramps, belly aches, or lower-back tension."
       />
       <div className="no-scrollbar -mx-4 mt-6 flex snap-x gap-4 overflow-x-auto px-4 pb-2 sm:-mx-6 sm:px-6 lg:mx-0 lg:grid lg:grid-cols-3 lg:overflow-visible lg:px-0">
         {PAIN_RELIEF.map((card) => (
@@ -801,15 +1129,15 @@ function BatterySection() {
           <SectionHeading
             align="left"
             eyebrow="Power that lasts"
-            title="2000mAh rechargeable battery."
-            text="Charge with USB-C, then take your heat with you. No outlet hunting, no cord across the couch, no bulky plug pack."
+            title="Up to 3hrs battery."
+            text="Recharge with the included USB-C to USB-A cable, then take your heat with you. No outlet hunting, no cord across the couch, no bulky plug pack."
           />
           <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
             {[
-              ["battery", "Long-life battery"],
-              ["clock", "30-min auto off"],
+              ["battery", "Up to 3hrs"],
+              ["clock", "Quick recharge"],
               ["truck", "Portable"],
-              ["shield", "Safe timer"],
+              ["power", "Cordless use"],
             ].map(([icon, label]) => (
               <div key={label} className="rounded-[20px] bg-white p-4 text-center shadow-sm">
                 <div className="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-[#eaf7ef] text-[#2d7b59]">
@@ -834,7 +1162,7 @@ function ComparisonSection() {
     ["5 gentle massage modes", "Limited vibration"],
     ["Soft flannel cushion", "Rough plastic pad"],
     ["Cordless and wearable", "Corded or bulky"],
-    ["Auto shut-off timer", "No safety timer"],
+    ["Up to 3hrs battery", "Short corded sessions"],
   ];
 
   return (
@@ -848,7 +1176,7 @@ function ComparisonSection() {
             align="left"
             eyebrow="Why choose ComfyWon"
             title="Small comfort upgrades add up."
-            text="Make the comparison easy before the customer has time to wonder if a basic pad is enough."
+            text="You get targeted heat, gentle vibration, and cordless comfort in one soft wearable pad, so you can keep moving instead of waiting beside an outlet."
           />
           <div className="mt-5 overflow-hidden rounded-[24px] border border-rose-100">
             <div className="grid grid-cols-2 bg-[#bd003f] text-center text-[15px] font-black text-white">
@@ -878,37 +1206,15 @@ function ComparisonSection() {
   );
 }
 
-function KitSection() {
-  return (
-    <section className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
-      <div className="rounded-[30px] border border-rose-100 bg-white/80 p-4 shadow-[0_18px_45px_rgba(178,75,98,0.10)] lg:p-6">
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {KIT_ITEMS.map((item) => (
-            <div key={item.title} className="flex items-center gap-3 rounded-[22px] bg-[#fff7f4] p-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white text-[#bd003f] shadow-sm">
-                <Icon name={item.icon} size={23} />
-              </div>
-              <div>
-                <h3 className="text-[15px] font-black text-stone-900">{item.title}</h3>
-                <p className="text-[13px] text-stone-600">{item.text}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
 function ReviewMiniCard({ review }) {
   return (
     <article className="min-w-[82%] snap-start rounded-[24px] border border-rose-100 bg-white p-4 shadow-[0_16px_40px_rgba(178,75,98,0.11)] sm:min-w-[340px] lg:min-w-0">
       <div className="flex items-center gap-3">
-        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#ffe4ea] font-black text-[#bd003f]">
+        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#ffe4ea] text-[14px] font-black text-[#bd003f]">
           {review.name.charAt(0)}
         </div>
         <div>
-          <Stars size={16} />
+          <Stars size={16} rating={review.rating || 5} />
           <p className="mt-1 text-[13px] font-black text-stone-800">{review.name}</p>
         </div>
       </div>
@@ -923,6 +1229,10 @@ function ReviewsPreview({ navigate }) {
     <section className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
       <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <SectionHeading align="left" eyebrow="Customer proof" title="Loved by thousands of women." />
+        <div className="flex items-center gap-3 rounded-full bg-white/80 px-4 py-3 text-[13px] font-black text-stone-700 shadow-sm">
+          <ReviewFaces size="sm" />
+          <span>{REVIEW_TOTAL.toLocaleString()} reviews | {REVIEW_RATING}/5</span>
+        </div>
         <button
           className="w-fit rounded-full border border-[#bd003f] bg-white px-5 py-3 text-[14px] font-black text-[#bd003f] shadow-sm"
           onClick={() => navigate("reviews")}
@@ -930,10 +1240,60 @@ function ReviewsPreview({ navigate }) {
           See more reviews
         </button>
       </div>
-      <div className="no-scrollbar -mx-4 flex snap-x gap-4 overflow-x-auto px-4 pb-2 sm:-mx-6 sm:px-6 lg:mx-0 lg:grid lg:grid-cols-3 lg:overflow-visible lg:px-0">
-        {REVIEWS.slice(0, 3).map((review) => (
+      <div className="no-scrollbar -mx-4 flex snap-x gap-4 overflow-x-auto px-4 pb-2 sm:-mx-6 sm:px-6 lg:mx-0 lg:grid lg:grid-cols-4 lg:overflow-visible lg:px-0">
+        {REVIEWS.slice(0, 4).map((review) => (
           <ReviewMiniCard key={review.name} review={review} />
         ))}
+      </div>
+    </section>
+  );
+}
+
+function FAQSection() {
+  const [openIndex, setOpenIndex] = useState(0);
+
+  return (
+    <section className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
+      <div className="grid gap-6 rounded-[30px] border border-rose-100 bg-white/85 p-4 shadow-[0_18px_45px_rgba(178,75,98,0.10)] lg:grid-cols-[0.75fr_1.25fr] lg:p-7">
+        <SectionHeading
+          align="left"
+          eyebrow="FAQ"
+          title="Quick answers before you order."
+          text="Everything most customers want to know about shipping, use, battery life, and damaged arrivals."
+        />
+        <div className="grid gap-3">
+          {FAQ_ITEMS.map((item, index) => {
+            const isOpen = openIndex === index;
+            return (
+              <div key={item.question} className="overflow-hidden rounded-[22px] border border-rose-100 bg-[#fff7f4]">
+                <button
+                  className="flex w-full items-center justify-between gap-4 p-4 text-left"
+                  onClick={() => setOpenIndex(isOpen ? -1 : index)}
+                  aria-expanded={isOpen}
+                >
+                  <span className="text-[15px] font-black leading-snug text-stone-950">{item.question}</span>
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-[#bd003f] shadow-sm">
+                    <Icon name={isOpen ? "x" : "plus"} size={18} />
+                  </span>
+                </button>
+                <AnimatePresence initial={false}>
+                  {isOpen && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.22, ease: "easeOut" }}
+                    >
+                      <p className="border-t border-rose-100 bg-white px-4 py-4 text-[14px] leading-relaxed text-stone-600">
+                        {item.answer}
+                      </p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </section>
   );
@@ -953,8 +1313,8 @@ function OfferBox({ navigate }) {
             Feel better before the cramps take over.
           </h2>
           <p className="mx-auto mt-4 max-w-[620px] text-[15px] font-semibold leading-relaxed text-white/90 sm:text-[18px]">
-            Limited launch offer: wearable heating belt, USB-C cable, storage pouch,
-            quick guide, and free shipping included.
+            Limited launch offer: cordless period heating pad, charging cable,
+            2 day shipping, and free shipping included.
           </p>
 
           <div className="mx-auto mt-6 grid max-w-[560px] grid-cols-3 gap-3 text-center">
@@ -974,12 +1334,12 @@ function OfferBox({ navigate }) {
             className="mx-auto mt-6 flex h-[58px] w-full max-w-[560px] items-center justify-center gap-3 rounded-[18px] bg-white text-[18px] font-black text-[#bd003f] shadow-xl sm:text-[20px]"
             onClick={() => navigate("product")}
           >
-            Get Mine Now - $30
+            Get Mine Now - {PRODUCT_PRICE_LABEL}
             <Icon name="arrow" size={22} />
           </button>
 
           <div className="mx-auto mt-4 grid max-w-[560px] grid-cols-3 gap-2 text-[11px] font-black sm:text-[13px]">
-            {["Free shipping", "Auto shut-off", "USB-C"].map((item) => (
+            {["Free shipping", "2 day shipping", "Huge sale"].map((item) => (
               <span key={item} className="flex items-center justify-center gap-1">
                 <Icon name="check" size={15} />
                 {item}
@@ -1018,8 +1378,8 @@ function HomePage({ navigate, goToSection }) {
       <ComfortFabricSection />
       <BatterySection />
       <ComparisonSection />
-      <KitSection />
       <ReviewsPreview navigate={navigate} />
+      <FAQSection />
       <OfferBox navigate={navigate} />
       <TrustBar />
       <MobileStickyBar navigate={navigate} />
@@ -1031,17 +1391,17 @@ function MobileStickyBar({ navigate }) {
   const countdown = useCountdown();
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-40 border-t border-white/80 bg-white/92 px-4 py-3 shadow-[0_-16px_40px_rgba(120,42,64,0.14)] backdrop-blur lg:hidden">
+    <div className="fixed inset-x-0 bottom-0 z-40 border-t border-white/50 bg-white/35 px-4 py-3 shadow-[0_-18px_44px_rgba(120,42,64,0.18)] backdrop-blur-xl lg:hidden">
       <button
-        className="mx-auto flex h-14 w-full max-w-md items-center justify-center gap-2 rounded-full bg-white text-[14px] font-black text-stone-900 shadow-sm"
+        className="mx-auto flex h-14 w-full max-w-md items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#e65478] to-[#bd003f] text-[14px] font-black text-white shadow-[0_16px_34px_rgba(189,0,63,0.32)]"
         onClick={() => navigate("product")}
       >
-        <span className="text-rose-500">50% off</span>
-        <span className="text-[12px] text-stone-500">{countdown.hours}:{countdown.minutes}:{countdown.seconds}</span>
+        <span>50% off</span>
+        <span className="text-[12px] text-white/80">{countdown.hours}:{countdown.minutes}:{countdown.seconds}</span>
         <span>
-          <span className="text-stone-400 line-through">$60</span> $30
+          <span className="text-white/55 line-through">{RETAIL_PRICE_LABEL}</span> {PRODUCT_PRICE_LABEL}
         </span>
-        <span className="flex items-center gap-1 text-[#bd003f]">
+        <span className="flex items-center gap-1">
           Buy <Icon name="arrow" size={17} />
         </span>
       </button>
@@ -1098,17 +1458,19 @@ function BuyBox({ selectedColor, setSelectedColor, onAddToCart }) {
           <span className="text-[13px] font-black text-[#2d7b59]">In stock</span>
         </div>
         <h1 className="mt-3 text-[27px] font-black leading-tight text-stone-950 sm:text-[34px]">
-          ComfyWon Cordless Heating Belt
+          ComfyWon Cordless Period Heating Pad
         </h1>
         <div className="mt-3 flex flex-wrap items-center gap-2">
           <Stars size={17} />
-          <span className="text-[14px] font-black text-stone-800">4.9</span>
-          <span className="text-[13px] text-stone-500">10,000+ happy customers</span>
+          <span className="text-[14px] font-black text-stone-800">{REVIEW_RATING}</span>
+          <span className="text-[13px] text-stone-500">{REVIEW_TOTAL.toLocaleString()} reviews</span>
         </div>
         <div className="mt-4 flex items-end gap-3">
-          <span className="text-[42px] font-black leading-none text-[#bd003f]">$30</span>
-          <span className="pb-1 text-[20px] font-bold text-stone-400 line-through">$60</span>
-          <span className="pb-1 text-[13px] font-black text-[#2d7b59]">You save $30</span>
+          <span className="text-[42px] font-black leading-none text-[#bd003f]">{PRODUCT_PRICE_LABEL}</span>
+          <span className="pb-1 text-[20px] font-bold text-stone-400 line-through">{RETAIL_PRICE_LABEL}</span>
+          <span className="pb-1 text-[13px] font-black text-[#2d7b59]">
+            You save {formatPriceFromCents(RETAIL_PRICE_CENTS - PRODUCT_PRICE_CENTS)}
+          </span>
         </div>
         <p className="mt-3 rounded-full bg-white px-3 py-2 text-center text-[13px] font-black text-[#bd003f]">
           Offer ends in {countdown.hours}:{countdown.minutes}:{countdown.seconds}
@@ -1168,10 +1530,10 @@ function BuyBox({ selectedColor, setSelectedColor, onAddToCart }) {
 
       <div className="mt-5 grid gap-2 text-[13px] font-bold text-stone-700">
         {[
-          "Fast and free shipping today",
-          "30-day money-back guarantee",
-          "Auto shut-off safety timer",
-          "USB-C cable and pouch included",
+          "15 day refund or replacement guarantee",
+          "2 day shipping",
+          "Free shipping",
+          "Big sale today",
         ].map((item) => (
           <div key={item} className="flex items-center gap-2">
             <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#eaf7ef] text-[#2d7b59]">
@@ -1182,6 +1544,58 @@ function BuyBox({ selectedColor, setSelectedColor, onAddToCart }) {
         ))}
       </div>
     </aside>
+  );
+}
+
+function ProductAboutSection() {
+  const [openIndex, setOpenIndex] = useState(0);
+
+  return (
+    <section className="mt-10 rounded-[30px] border border-rose-100 bg-white/85 p-4 shadow-[0_18px_45px_rgba(178,75,98,0.10)] lg:p-6">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p className="text-[13px] font-black uppercase tracking-[0.18em] text-rose-500">Product details</p>
+          <h2 className="mt-1 text-[28px] font-black text-[#bd003f]">About this item</h2>
+        </div>
+        <p className="max-w-xl text-[14px] font-semibold leading-relaxed text-stone-600">
+          Tap each detail to see what makes ComfyWon useful for period cramps, lower abdominal comfort, and everyday warmth.
+        </p>
+      </div>
+
+      <div className="mt-5 grid gap-3">
+        {PRODUCT_ABOUT_ITEMS.map((item, index) => {
+          const isOpen = openIndex === index;
+          return (
+            <div key={item.title} className="overflow-hidden rounded-[22px] border border-rose-100 bg-[#fff7f4]">
+              <button
+                className="flex w-full items-center justify-between gap-4 p-4 text-left"
+                onClick={() => setOpenIndex(isOpen ? -1 : index)}
+                aria-expanded={isOpen}
+              >
+                <span className="text-[16px] font-black text-stone-950">{item.title}</span>
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-[#bd003f] shadow-sm">
+                  <Icon name={isOpen ? "x" : "plus"} size={18} />
+                </span>
+              </button>
+              <AnimatePresence initial={false}>
+                {isOpen && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.22, ease: "easeOut" }}
+                  >
+                    <p className="border-t border-rose-100 bg-white px-4 py-4 text-[14px] leading-relaxed text-stone-600">
+                      {item.text}
+                    </p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          );
+        })}
+      </div>
+    </section>
   );
 }
 
@@ -1203,11 +1617,11 @@ function CartConfirmationModal({
   const isAdded = !isEmpty && view === "added";
   const showLines = !isEmpty && view === "cart" && cart.length > 0;
   const itemWord = cartCount === 1 ? "item" : "items";
-  const subtotal = cartCount * 30;
+  const subtotal = cartCount * PRODUCT_PRICE_CENTS;
   const eyebrow = isEmpty ? "Cart" : isAdded ? "Added to cart" : "Your cart";
   const title = isEmpty ? "Your cart is empty." : isAdded ? "Your ComfyWon is in the cart." : "Your cart is ready.";
   const checkoutLabel = checkoutLoading
-    ? "Redirecting to secure checkout..."
+    ? "Redirecting to checkout..."
     : isEmpty
     ? "Shop ComfyWon"
     : "Go to Checkout";
@@ -1271,7 +1685,7 @@ function CartConfirmationModal({
               <div className="mt-5 rounded-[22px] border border-rose-100 bg-white p-4">
                 <div className="flex items-center justify-between gap-3">
                   <div>
-                    <p className="text-[15px] font-black text-stone-900">ComfyWon Cordless Heating Belt</p>
+                    <p className="text-[15px] font-black text-stone-900">ComfyWon Cordless Period Heating Pad</p>
                     <p className="mt-1 text-[13px] font-bold text-stone-500">
                       {isEmpty
                         ? "No items yet. Pick a color to start your cart."
@@ -1282,11 +1696,11 @@ function CartConfirmationModal({
                   </div>
                   <div className="text-right">
                     <p className="text-[13px] font-black text-rose-500">50% off</p>
-                    <p className="text-[21px] font-black text-stone-950">${subtotal}</p>
+                    <p className="text-[21px] font-black text-stone-950">{formatPriceFromCents(subtotal)}</p>
                   </div>
                 </div>
                 <div className="mt-3 grid grid-cols-3 gap-2 text-center text-[11px] font-black text-stone-600">
-                  {["Free shipping", "USB-C", "30-day guarantee"].map((item) => (
+                  {["Free shipping", "2 day shipping", "Refund/replace"].map((item) => (
                     <span key={item} className="rounded-full bg-rose-50 px-2 py-2">
                       {item}
                     </span>
@@ -1303,7 +1717,9 @@ function CartConfirmationModal({
                     >
                       <div className="min-w-0">
                         <p className="truncate text-[14px] font-black text-stone-900">{line.colorLabel}</p>
-                        <p className="text-[12px] font-bold text-stone-500">${line.quantity * 30}</p>
+                        <p className="text-[12px] font-bold text-stone-500">
+                          {formatPriceFromCents(line.quantity * PRODUCT_PRICE_CENTS)}
+                        </p>
                       </div>
                       <div className="flex items-center gap-2">
                         <div className="flex items-center rounded-full border border-rose-100 bg-white p-0.5">
@@ -1344,7 +1760,7 @@ function CartConfirmationModal({
 
               {!isEmpty && (
                 <p className="mt-4 rounded-[18px] bg-white p-3 text-[13px] font-bold leading-snug text-stone-600">
-                  Your sale price, free shipping, and 30-day guarantee are saved in the cart.
+                  Your sale price, free shipping, and refund or replacement option are saved in the cart.
                 </p>
               )}
             </div>
@@ -1397,7 +1813,7 @@ function ProductPage({ navigate, onAddToCart }) {
         <BuyBox selectedColor={selectedColor} setSelectedColor={setSelectedColor} onAddToCart={onAddToCart} />
       </div>
 
-      <section className="mt-10 grid gap-4 lg:grid-cols-3">
+      <section className="mt-10 grid gap-4 lg:grid-cols-4">
         {FEATURES.map((feature) => (
           <div key={feature.title} className="rounded-[24px] bg-white p-5 shadow-sm">
             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-rose-50 text-[#bd003f]">
@@ -1409,11 +1825,15 @@ function ProductPage({ navigate, onAddToCart }) {
         ))}
       </section>
 
+      <ProductAboutSection />
+
       <section className="mt-10 rounded-[30px] border border-rose-100 bg-white p-4 shadow-sm lg:p-6">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-[13px] font-black uppercase tracking-[0.18em] text-rose-500">Real reviews</p>
-            <h2 className="mt-1 text-[28px] font-black text-[#bd003f]">4.9 out of 5 from ComfyWon customers</h2>
+            <h2 className="mt-1 text-[28px] font-black text-[#bd003f]">
+              {REVIEW_RATING} out of 5 | {REVIEW_TOTAL.toLocaleString()} ComfyWon reviews
+            </h2>
           </div>
           <button className="w-fit rounded-full bg-[#bd003f] px-5 py-3 text-[14px] font-black text-white" onClick={() => navigate("reviews")}>
             Read reviews
@@ -1431,9 +1851,9 @@ function ProductPage({ navigate, onAddToCart }) {
 
 function RatingBars() {
   const rows = [
-    ["5 star", "92%", "92%"],
-    ["4 star", "6%", "6%"],
-    ["3 star", "2%", "2%"],
+    ["5 star", "97%", "97%"],
+    ["4 star", "3%", "3%"],
+    ["3 star", "0%", "0%"],
     ["2 star", "0%", "0%"],
     ["1 star", "0%", "0%"],
   ];
@@ -1469,21 +1889,38 @@ function ReviewMediaCard({ item }) {
   );
 }
 
+function ReviewAvatar({ name }) {
+  return (
+    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#ffe4ea] text-[14px] font-black text-[#bd003f]">
+      {(name || "C").charAt(0)}
+    </div>
+  );
+}
+
 function FullReview({ review }) {
   return (
     <article className="border-b border-stone-200 py-6 last:border-0">
       <div className="flex gap-4">
-        <img src={review.image} alt="" className="h-16 w-16 shrink-0 rounded-[18px] object-cover" />
+        <ReviewAvatar name={review.name} />
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
-            <Stars size={16} />
+            <Stars size={16} rating={review.rating || 5} />
             <h3 className="text-[16px] font-black text-stone-900">{review.title}</h3>
           </div>
           <p className="mt-1 text-[13px] text-stone-500">
             By <span className="font-bold text-stone-700">{review.name}</span> on {review.date}
           </p>
-          <p className="mt-1 text-[13px] font-bold text-[#2d7b59]">Verified purchase - {review.color}</p>
+          <p className="mt-1 text-[13px] font-bold text-[#2d7b59]">
+            {review.local ? "Posted in this browser" : `Verified purchase - ${review.color}`}
+          </p>
           <p className="mt-3 text-[15px] leading-relaxed text-stone-700">{review.body}</p>
+          {review.imagePreview && (
+            <img
+              src={review.imagePreview}
+              alt="Customer uploaded review"
+              className="mt-4 max-h-64 w-full rounded-[18px] object-cover"
+            />
+          )}
           <div className="mt-4 flex flex-wrap items-center gap-3 text-[13px] text-stone-500">
             <span>{review.helpful} people found this helpful</span>
             <button className="rounded-full border border-stone-200 px-4 py-2 font-bold text-stone-700">Helpful</button>
@@ -1495,7 +1932,154 @@ function FullReview({ review }) {
   );
 }
 
+function WriteReviewForm({ isOpen, onClose, onPost }) {
+  const [name, setName] = useState("");
+  const [title, setTitle] = useState("");
+  const [body, setBody] = useState("");
+  const [rating, setRating] = useState(5);
+  const [imageFile, setImageFile] = useState(null);
+  const [posted, setPosted] = useState(false);
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const cleanName = name.trim() || "Customer";
+    const cleanBody = body.trim();
+    if (!cleanBody) return;
+    const imagePreview = imageFile ? URL.createObjectURL(imageFile) : "";
+    onPost({
+      name: cleanName,
+      title: title.trim() || "Customer review",
+      body: cleanBody,
+      rating,
+      color: "Customer choice",
+      date: "Just now",
+      helpful: 0,
+      local: true,
+      imagePreview,
+    });
+    setName("");
+    setTitle("");
+    setBody("");
+    setRating(5);
+    setImageFile(null);
+    setPosted(true);
+    window.setTimeout(() => {
+      setPosted(false);
+      onClose();
+    }, 700);
+  };
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          className="fixed inset-0 z-[95] flex items-end justify-center bg-[#3b0718]/35 px-4 pb-4 backdrop-blur-sm sm:items-center sm:pb-0"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          onClick={onClose}
+        >
+          <motion.form
+            onSubmit={handleSubmit}
+            className="w-full max-w-xl rounded-[30px] bg-white p-5 shadow-[0_28px_90px_rgba(70,8,29,0.28)]"
+            initial={{ opacity: 0, y: 32, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 24, scale: 0.98 }}
+            transition={{ duration: 0.24, ease: "easeOut" }}
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="text-[13px] font-black uppercase tracking-[0.18em] text-rose-500">Write a review</p>
+                <h2 className="mt-1 text-[26px] font-black text-stone-950">Share your ComfyWon experience</h2>
+              </div>
+              <button
+                type="button"
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-rose-50 text-[#bd003f]"
+                onClick={onClose}
+                aria-label="Close write review form"
+              >
+                <Icon name="x" size={20} />
+              </button>
+            </div>
+            {posted && <p className="mt-3 text-[13px] font-black text-[#2d7b59]">Posted for this visit.</p>}
+
+            <div className="mt-4 grid gap-3 sm:grid-cols-2">
+              <input
+                className="h-12 rounded-[18px] border border-rose-100 bg-[#fff7f4] px-4 text-[14px] font-bold outline-none focus:border-[#bd003f]"
+                value={name}
+                onChange={(event) => setName(event.target.value)}
+                placeholder="Name"
+              />
+              <input
+                className="h-12 rounded-[18px] border border-rose-100 bg-[#fff7f4] px-4 text-[14px] font-bold outline-none focus:border-[#bd003f]"
+                value={title}
+                onChange={(event) => setTitle(event.target.value)}
+                placeholder="Review title"
+              />
+            </div>
+
+            <div className="mt-3 flex flex-wrap items-center gap-2">
+              <span className="mr-1 text-[14px] font-black text-stone-900">Rating</span>
+              {[1, 2, 3, 4, 5].map((value) => (
+                <button
+                  key={value}
+                  type="button"
+                  className={`flex h-10 w-10 items-center justify-center rounded-full text-[13px] font-black ${
+                    rating === value ? "bg-[#bd003f] text-white" : "border border-rose-100 bg-white text-stone-700"
+                  }`}
+                  onClick={() => setRating(value)}
+                  aria-label={`${value} star review`}
+                >
+                  {value}
+                </button>
+              ))}
+            </div>
+
+            <label className="mt-3 flex min-h-14 cursor-pointer items-center justify-between gap-3 rounded-[18px] border border-dashed border-rose-200 bg-[#fff7f4] px-4 py-3 text-[14px] font-bold text-stone-600">
+              <span>{imageFile ? imageFile.name : "Upload an image"}</span>
+              <span className="rounded-full bg-white px-3 py-2 text-[12px] font-black text-[#bd003f] shadow-sm">
+                Choose
+              </span>
+              <input
+                className="hidden"
+                type="file"
+                accept="image/*"
+                onChange={(event) => setImageFile(event.target.files?.[0] || null)}
+              />
+            </label>
+
+            <textarea
+              className="mt-3 min-h-[120px] w-full rounded-[18px] border border-rose-100 bg-[#fff7f4] p-4 text-[14px] font-semibold leading-relaxed outline-none focus:border-[#bd003f]"
+              value={body}
+              onChange={(event) => setBody(event.target.value)}
+              placeholder="Write your review"
+            />
+
+            <button className="mt-3 flex h-12 w-full items-center justify-center rounded-full bg-[#bd003f] text-[15px] font-black text-white">
+              Post review
+            </button>
+          </motion.form>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
 function ReviewsPage({ navigate }) {
+  const [page, setPage] = useState(1);
+  const [localReviews, setLocalReviews] = useState([]);
+  const [reviewFormOpen, setReviewFormOpen] = useState(false);
+  const allReviews = [...localReviews, ...REVIEWS];
+  const pageCount = 5;
+  const reviewsPerPage = 5;
+  const visibleReviews = allReviews.slice((page - 1) * reviewsPerPage, page * reviewsPerPage);
+
+  const handlePostReview = (review) => {
+    setLocalReviews((current) => [review, ...current]);
+    setPage(1);
+  };
+
   return (
     <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 lg:py-10">
       <button className="mb-5 text-[14px] font-black text-[#bd003f]" onClick={() => navigate("home")}>
@@ -1505,10 +2089,10 @@ function ReviewsPage({ navigate }) {
       <div className="grid gap-6 lg:grid-cols-[0.42fr_0.58fr] lg:items-start">
         <aside className="mobile-card-bound min-w-0 w-full max-w-[calc(100vw-2rem)] rounded-[28px] border border-rose-100 bg-white p-5 shadow-[0_20px_60px_rgba(145,50,78,0.12)] lg:sticky lg:top-24 lg:max-w-none">
           <p className="text-[13px] font-black uppercase tracking-[0.18em] text-rose-500">Customer reviews</p>
-          <h1 className="mt-2 text-[34px] font-black text-stone-950">4.9 out of 5</h1>
+          <h1 className="mt-2 text-[34px] font-black text-stone-950">{REVIEW_RATING} out of 5</h1>
           <div className="mt-2 flex items-center gap-3">
             <Stars size={20} />
-            <span className="text-[14px] font-bold text-stone-500">10,000+ ratings</span>
+            <span className="text-[14px] font-bold text-stone-500">{REVIEW_TOTAL.toLocaleString()} reviews</span>
           </div>
           <div className="mt-5">
             <RatingBars />
@@ -1519,10 +2103,19 @@ function ReviewsPage({ navigate }) {
               "The heat comes on fast and the massage makes it easier to keep working instead of curling up in bed."
             </p>
           </div>
-          <button className="mt-5 flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#bd003f] font-black text-white" onClick={() => navigate("product")}>
-            Buy the sale offer
-            <Icon name="cart" size={18} />
-          </button>
+          <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+            <button className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#bd003f] px-4 font-black text-white" onClick={() => navigate("product")}>
+              Buy the sale offer
+              <Icon name="cart" size={18} />
+            </button>
+            <button
+              className="flex h-12 w-full items-center justify-center gap-2 rounded-full border-2 border-[#bd003f] bg-white px-4 font-black text-[#bd003f]"
+              onClick={() => setReviewFormOpen(true)}
+            >
+              Write review
+              <Icon name="plus" size={18} />
+            </button>
+          </div>
         </aside>
 
         <section className="mobile-card-bound min-w-0 w-full max-w-[calc(100vw-2rem)] lg:max-w-none">
@@ -1541,32 +2134,54 @@ function ReviewsPage({ navigate }) {
           <div className="mt-5 rounded-[28px] border border-rose-100 bg-white p-4 shadow-sm lg:p-5">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <h2 className="text-[22px] font-black text-stone-950">Top reviews</h2>
-              <div className="no-scrollbar flex gap-2 overflow-x-auto">
-                {["All", "Cramps", "Back pain", "Battery", "Soft fabric"].map((chip) => (
-                  <button key={chip} className="shrink-0 rounded-full border border-stone-200 px-4 py-2 text-[13px] font-black text-stone-700">
-                    {chip}
-                  </button>
-                ))}
-                <button className="flex shrink-0 items-center gap-1 rounded-full bg-stone-900 px-4 py-2 text-[13px] font-black text-white">
-                  <Icon name="filter" size={15} />
-                  Filter
-                </button>
-              </div>
+              <p className="text-[13px] font-bold text-stone-500">Showing customer reviews</p>
             </div>
 
             <div className="mt-2">
-              {REVIEWS.slice(0, 6).map((review) => (
-                <FullReview key={review.name} review={review} />
+              {visibleReviews.map((review) => (
+                <FullReview key={`${review.name}-${review.date}-${review.title}`} review={review} />
               ))}
+            </div>
+
+            <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
+              <div className="flex gap-2">
+                {Array.from({ length: pageCount }, (_, index) => index + 1).map((number) => (
+                  <button
+                    key={number}
+                    className={`flex h-10 w-10 items-center justify-center rounded-full text-[14px] font-black ${
+                      page === number ? "bg-[#bd003f] text-white" : "border border-rose-100 bg-white text-stone-700"
+                    }`}
+                    onClick={() => setPage(number)}
+                    aria-label={`Go to review page ${number}`}
+                  >
+                    {number}
+                  </button>
+                ))}
+              </div>
+              <button
+                className="flex h-10 items-center gap-2 rounded-full bg-stone-950 px-5 text-[14px] font-black text-white disabled:opacity-40"
+                onClick={() => setPage((current) => Math.min(pageCount, current + 1))}
+                disabled={page === pageCount}
+              >
+                Next
+                <Icon name="arrow" size={16} />
+              </button>
             </div>
           </div>
         </section>
       </div>
+      <WriteReviewForm
+        isOpen={reviewFormOpen}
+        onClose={() => setReviewFormOpen(false)}
+        onPost={handlePostReview}
+      />
     </main>
   );
 }
 
 function Footer({ navigate }) {
+  const [policyOpen, setPolicyOpen] = useState(false);
+
   return (
     <footer className="border-t border-rose-100 bg-white/80 px-4 py-8 sm:px-6 lg:px-8">
       <div className="mx-auto flex max-w-7xl flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -1580,8 +2195,61 @@ function Footer({ navigate }) {
           <button onClick={() => navigate("product")}>Shop</button>
           <button onClick={() => navigate("reviews")}>Reviews</button>
           <button onClick={() => navigate("home")}>Home</button>
+          <button onClick={() => setPolicyOpen(true)}>Refund Policy</button>
         </div>
       </div>
+
+      <AnimatePresence>
+        {policyOpen && (
+          <motion.div
+            className="fixed inset-0 z-[95] flex items-end justify-center bg-[#3b0718]/35 px-4 pb-4 backdrop-blur-sm sm:items-center sm:pb-0"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setPolicyOpen(false)}
+          >
+            <motion.div
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="refund-policy-title"
+              className="w-full max-w-lg rounded-[30px] bg-white p-5 shadow-[0_28px_90px_rgba(70,8,29,0.28)]"
+              initial={{ opacity: 0, y: 32, scale: 0.96 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 24, scale: 0.98 }}
+              transition={{ duration: 0.24, ease: "easeOut" }}
+              onClick={(event) => event.stopPropagation()}
+            >
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <p className="text-[12px] font-black uppercase tracking-[0.18em] text-rose-500">ComfyWon</p>
+                  <h2 id="refund-policy-title" className="mt-1 text-[28px] font-black text-[#bd003f]">
+                    Refund Policy
+                  </h2>
+                </div>
+                <button
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-rose-50 text-[#bd003f]"
+                  onClick={() => setPolicyOpen(false)}
+                  aria-label="Close refund policy"
+                >
+                  <Icon name="x" size={20} />
+                </button>
+              </div>
+              <p className="mt-4 text-[15px] leading-relaxed text-stone-700">
+                If your item arrives damaged or does not work, contact support with your order details and a short description of the problem. Eligible orders can receive a refund or replacement after the issue is reviewed.
+              </p>
+              <p className="mt-3 text-[15px] leading-relaxed text-stone-700">
+                Items should be returned in the condition received when a return is requested. Shipping timing, refund approval, and replacement availability may depend on the order status and product condition.
+              </p>
+              <button
+                className="mt-5 flex h-12 w-full items-center justify-center rounded-full bg-[#bd003f] text-[15px] font-black text-white"
+                onClick={() => setPolicyOpen(false)}
+              >
+                Got it
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </footer>
   );
 }

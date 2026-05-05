@@ -121,7 +121,8 @@ The included `Dockerfile` and `.dockerignore` are ready for Fly.io. `fly.toml` i
    fly secrets set FRONTEND_ORIGINS=https://comfywon.vercel.app
 
    # After custom domain is wired up:
-   # fly secrets set FRONTEND_ORIGINS=https://comfywon.com,https://www.comfywon.com,https://comfywon.vercel.app
+   # Current production origins:
+   fly secrets set FRONTEND_ORIGINS=https://shopcomfywon.com,https://www.shopcomfywon.com,https://comfywon-comfytemp-project.vercel.app
    fly secrets set MAX_CHECKOUT_QUANTITY=5
    ```
 
