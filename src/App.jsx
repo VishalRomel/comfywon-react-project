@@ -4,6 +4,8 @@ import { createCheckout } from "./api/checkout";
 
 const CART_STORAGE_KEY = "comfywon.cart.v1";
 const SHOPIFY_STORE_HOST = "comfywon.myshopify.com";
+const CUSTOMER_VIDEO_SRC = "https://psy6pii52jnn4obo.public.blob.vercel-storage.com/Customer%20Video.mp4";
+const CUSTOMER_VIDEO_THUMBNAIL = "/Video Thumbnail.png";
 
 function isSafeCheckoutUrl(url) {
   try {
@@ -282,34 +284,34 @@ const HOW_STEPS = [
 
 const LIFESTYLE_CARDS = [
   {
-    icon: "home",
-    title: "At Home",
-    text: "Relax on the couch, clean up, cook, or wind down with targeted warmth.",
-    image: "/product-hero.png",
-  },
-  {
     icon: "briefcase",
-    title: "At Work",
-    text: "Low-profile comfort that sits under loose layers without cords.",
-    image: "/Listing Image 5.jpg",
-  },
-  {
-    icon: "moon",
-    title: "While Resting",
-    text: "A calmer way to settle in when cramps interrupt your evening.",
-    image: "/1.png",
-  },
-  {
-    icon: "heart",
-    title: "Errands & School",
-    text: "Cordless heat you can wear while you keep moving through a busy day.",
-    image: "/Listing Image 8.jpg",
+    title: "Working",
+    text: "Low-profile warmth you can wear at your desk, during study time, or between meetings.",
+    image: "/Working.png",
   },
   {
     icon: "truck",
-    title: "Travel Days",
-    text: "Keep soothing warmth close in a bag, suitcase, desk drawer, or car.",
-    image: "/Listing Image 9.jpg",
+    title: "Driving",
+    text: "Cordless comfort for commutes, errands, and long rides when cramps do not wait.",
+    image: "/Driving.png",
+  },
+  {
+    icon: "package",
+    title: "Travelling",
+    text: "Easy to pack and keep close in a bag, suitcase, or hotel room when your cycle starts.",
+    image: "/Travelling.png",
+  },
+  {
+    icon: "heart",
+    title: "Exercising",
+    text: "Wear gentle heat before or after light movement when your lower belly feels tight.",
+    image: "/Excersice.png",
+  },
+  {
+    icon: "moon",
+    title: "Relaxing",
+    text: "Settle into the couch, bed, or a quiet night with soothing heat and massage.",
+    image: "/Relaxing.png",
   },
 ];
 
@@ -599,9 +601,9 @@ const REVIEWS = [
 
 const REVIEW_MEDIA = [
   { type: "image", src: "/product-hero.png", label: "Customer photo" },
-  { type: "video", src: "/Listing Image 2.jpg", label: "Relief demo" },
+  { type: "video", src: CUSTOMER_VIDEO_SRC, label: "Customer video" },
   { type: "image", src: "/Listing Image 7.jpg", label: "Soft fabric" },
-  { type: "video", src: "/Listing Image 5.jpg", label: "Workday use" },
+  { type: "image", src: "/Listing Image 5.jpg", label: "Workday use" },
   { type: "image", src: "/comfywon-white-variant.png", label: "White color" },
   { type: "image", src: "/Listing Image 1.jpg", label: "Pink color" },
 ];
@@ -958,6 +960,14 @@ function FeaturesStrip() {
 }
 
 function HowItWorks() {
+  const customerVideoRef = React.useRef(null);
+  const [customerVideoStarted, setCustomerVideoStarted] = useState(false);
+
+  const playCustomerVideo = () => {
+    setCustomerVideoStarted(true);
+    customerVideoRef.current?.play?.();
+  };
+
   return (
     <section id="how-it-works" className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
       <div className="overflow-hidden rounded-[34px] bg-[linear-gradient(135deg,#9b0035,#e65478)] p-5 text-white shadow-[0_26px_70px_rgba(168,23,73,0.26)] lg:p-8">
@@ -976,14 +986,26 @@ function HowItWorks() {
             <p className="px-2 pb-3 text-[14px] font-black text-white">
               See the product from a customer perspective
             </p>
-            <div className="relative min-h-[285px] overflow-hidden rounded-[22px] bg-stone-950">
-              <img src="/Listing Image 2.jpg" alt="ComfyWon product video preview" className="h-full min-h-[285px] w-full object-cover opacity-70" />
-              <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
-                <span className="flex h-16 w-16 items-center justify-center rounded-full bg-white/90 text-[#bd003f] shadow-xl">
-                  <Icon name="play" size={25} fill="currentColor" strokeWidth={0} />
-                </span>
-                <p className="mt-3 text-[15px] font-black">Video placeholder</p>
-              </div>
+            <div className="relative aspect-video overflow-hidden rounded-[22px] bg-stone-950">
+              <video
+                ref={customerVideoRef}
+                src={CUSTOMER_VIDEO_SRC}
+                poster={CUSTOMER_VIDEO_THUMBNAIL}
+                className="h-full w-full object-contain"
+                controls
+                playsInline
+                preload="metadata"
+                onPlay={() => setCustomerVideoStarted(true)}
+              />
+              {!customerVideoStarted && (
+                <button
+                  className="absolute left-1/2 top-1/2 flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white/92 text-[#bd003f] shadow-xl"
+                  onClick={playCustomerVideo}
+                  aria-label="Play customer video"
+                >
+                  <Icon name="play" size={19} fill="currentColor" strokeWidth={0} />
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -1414,38 +1436,149 @@ function ProductGallery({ selectedColor }) {
   const colorAsset = PRODUCT_COLORS.find((item) => item.id === selectedColor)?.image || selectedGallery[0];
   const gallery = useMemo(() => {
     const rest = selectedGallery.filter((image) => image !== colorAsset);
-    return [colorAsset, ...rest.slice(0, 8)];
+    const imageItems = [colorAsset, ...rest.slice(0, 8)].map((src) => ({
+      type: "image",
+      src,
+      label: "ComfyWon product view",
+    }));
+    return [
+      ...imageItems.slice(0, 3),
+      { type: "video", src: CUSTOMER_VIDEO_SRC, label: "Customer video" },
+      ...imageItems.slice(3),
+    ];
   }, [colorAsset, selectedGallery]);
-  const [active, setActive] = useState(gallery[0]);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const active = gallery[activeIndex] || gallery[0];
 
   useEffect(() => {
-    setActive(gallery[0]);
+    setActiveIndex(0);
   }, [gallery]);
+
+  const goToImage = (direction) => {
+    setActiveIndex((current) => (current + direction + gallery.length) % gallery.length);
+  };
 
   return (
     <div className="mobile-card-bound min-w-0 w-full max-w-[calc(100vw-2rem)] lg:max-w-none">
-      <div className="overflow-hidden rounded-[28px] border border-rose-100 bg-white shadow-[0_18px_45px_rgba(178,75,98,0.12)]">
-        <img src={active} alt="ComfyWon product view" className="aspect-[4/3] w-full object-contain p-2 sm:aspect-square" />
-      </div>
+      <button
+        className="block w-full overflow-hidden rounded-[28px] border border-rose-100 bg-white shadow-[0_18px_45px_rgba(178,75,98,0.12)]"
+        onClick={() => setLightboxOpen(true)}
+        aria-label={active?.type === "video" ? "Expand customer video" : "Expand product image"}
+      >
+        {active?.type === "video" ? (
+          <div className="relative bg-stone-950">
+            <video
+              src={active.src}
+              poster={CUSTOMER_VIDEO_THUMBNAIL}
+              className="aspect-[4/3] w-full object-contain p-2 sm:aspect-square"
+              muted
+              playsInline
+              preload="metadata"
+            />
+            <span className="absolute left-1/2 top-1/2 flex h-14 w-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-[#bd003f] shadow-xl">
+              <Icon name="play" size={22} fill="currentColor" strokeWidth={0} />
+            </span>
+          </div>
+        ) : (
+          <img src={active?.src} alt="ComfyWon product view" className="aspect-[4/3] w-full object-contain p-2 sm:aspect-square" />
+        )}
+      </button>
       <div className="no-scrollbar mt-3 flex gap-3 overflow-x-auto pb-1">
-        {gallery.map((image) => (
+        {gallery.map((item, index) => (
           <button
-            key={image}
+            key={`${item.type}-${item.src}`}
             className={`h-20 w-20 shrink-0 overflow-hidden rounded-[18px] border-2 bg-white ${
-              active === image ? "border-[#bd003f]" : "border-rose-100"
+              activeIndex === index ? "border-[#bd003f]" : "border-rose-100"
             }`}
-            onClick={() => setActive(image)}
-            aria-label="View product image"
+            onClick={() => setActiveIndex(index)}
+            aria-label={item.type === "video" ? "View customer video" : "View product image"}
           >
-            <img src={image} alt="" className="h-full w-full object-cover" />
+            {item.type === "video" ? (
+              <div className="relative h-full w-full bg-stone-950">
+                <video
+                  src={item.src}
+                  poster={CUSTOMER_VIDEO_THUMBNAIL}
+                  className="h-full w-full object-cover"
+                  muted
+                  playsInline
+                  preload="metadata"
+                />
+                <span className="absolute inset-0 flex items-center justify-center bg-black/18 text-white">
+                  <Icon name="play" size={19} fill="currentColor" strokeWidth={0} />
+                </span>
+              </div>
+            ) : (
+              <img src={item.src} alt="" className="h-full w-full object-cover" />
+            )}
           </button>
         ))}
       </div>
+
+      <AnimatePresence>
+        {lightboxOpen && (
+          <motion.div
+            className="fixed inset-0 z-[95] flex items-center justify-center bg-[#2b0614]/85 p-3 backdrop-blur-sm"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setLightboxOpen(false)}
+          >
+            <motion.div
+              className="relative flex h-full w-full max-w-6xl items-center justify-center"
+              initial={{ opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.98 }}
+              transition={{ duration: 0.22, ease: "easeOut" }}
+              onClick={(event) => event.stopPropagation()}
+            >
+              <button
+                className="absolute right-2 top-2 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white text-[#bd003f] shadow-lg"
+                onClick={() => setLightboxOpen(false)}
+                aria-label="Close expanded product image"
+              >
+                <Icon name="x" size={22} />
+              </button>
+              <button
+                className="absolute left-2 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-white/92 text-[#bd003f] shadow-lg sm:left-4"
+                onClick={() => goToImage(-1)}
+                aria-label="Previous product image"
+              >
+                <Icon name="arrow" size={24} className="rotate-180" />
+              </button>
+              {active?.type === "video" ? (
+                <video
+                  src={active.src}
+                  poster={CUSTOMER_VIDEO_THUMBNAIL}
+                  className="max-h-[88vh] w-full max-w-[92vw] rounded-[22px] bg-black object-contain shadow-[0_30px_90px_rgba(0,0,0,0.35)]"
+                  controls
+                  autoPlay
+                  playsInline
+                  preload="metadata"
+                />
+              ) : (
+                <img
+                  src={active?.src}
+                  alt="Expanded ComfyWon product view"
+                  className="max-h-[88vh] w-full max-w-[92vw] rounded-[22px] bg-white object-contain p-2 shadow-[0_30px_90px_rgba(0,0,0,0.35)]"
+                />
+              )}
+              <button
+                className="absolute right-2 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-white/92 text-[#bd003f] shadow-lg sm:right-4"
+                onClick={() => goToImage(1)}
+                aria-label="Next product image"
+              >
+                <Icon name="arrow" size={24} />
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
 
-function BuyBox({ selectedColor, setSelectedColor, onAddToCart }) {
+function BuyBox({ selectedColor, setSelectedColor, onAddToCart, onSeeReviews }) {
   const [quantity, setQuantity] = useState(1);
   const selected = PRODUCT_COLORS.find((item) => item.id === selectedColor);
   const countdown = useCountdown();
@@ -1464,6 +1597,12 @@ function BuyBox({ selectedColor, setSelectedColor, onAddToCart }) {
           <Stars size={17} />
           <span className="text-[14px] font-black text-stone-800">{REVIEW_RATING}</span>
           <span className="text-[13px] text-stone-500">{REVIEW_TOTAL.toLocaleString()} reviews</span>
+          <button
+            className="rounded-full border border-rose-200 bg-white px-3 py-1 text-[12px] font-black text-[#bd003f] shadow-sm"
+            onClick={onSeeReviews}
+          >
+            See reviews
+          </button>
         </div>
         <div className="mt-4 flex items-end gap-3">
           <span className="text-[42px] font-black leading-none text-[#bd003f]">{PRODUCT_PRICE_LABEL}</span>
@@ -1810,8 +1949,15 @@ function ProductPage({ navigate, onAddToCart }) {
 
       <div className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr] lg:items-start">
         <ProductGallery selectedColor={selectedColor} />
-        <BuyBox selectedColor={selectedColor} setSelectedColor={setSelectedColor} onAddToCart={onAddToCart} />
+        <BuyBox
+          selectedColor={selectedColor}
+          setSelectedColor={setSelectedColor}
+          onAddToCart={onAddToCart}
+          onSeeReviews={() => document.getElementById("product-reviews")?.scrollIntoView({ behavior: "smooth", block: "start" })}
+        />
       </div>
+
+      <ProductAboutSection />
 
       <section className="mt-10 grid gap-4 lg:grid-cols-4">
         {FEATURES.map((feature) => (
@@ -1825,9 +1971,7 @@ function ProductPage({ navigate, onAddToCart }) {
         ))}
       </section>
 
-      <ProductAboutSection />
-
-      <section className="mt-10 rounded-[30px] border border-rose-100 bg-white p-4 shadow-sm lg:p-6">
+      <section id="product-reviews" className="mt-10 rounded-[30px] border border-rose-100 bg-white p-4 shadow-sm lg:p-6">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-[13px] font-black uppercase tracking-[0.18em] text-rose-500">Real reviews</p>
@@ -1876,7 +2020,17 @@ function RatingBars() {
 function ReviewMediaCard({ item }) {
   return (
     <button className="relative min-w-[150px] snap-start overflow-hidden rounded-[18px] bg-white shadow-sm sm:min-w-[190px]">
-      <img src={item.src} alt={item.label} className="aspect-square w-full object-cover" />
+      {item.type === "video" ? (
+        <video
+          src={item.src}
+          className="aspect-square w-full object-cover"
+          muted
+          playsInline
+          preload="metadata"
+        />
+      ) : (
+        <img src={item.src} alt={item.label} className="aspect-square w-full object-cover" />
+      )}
       <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/55 to-transparent p-3 text-left text-[12px] font-black text-white">
         {item.label}
       </div>
