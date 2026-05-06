@@ -233,7 +233,7 @@ const PRODUCT_COLORS = [
 const REVIEW_TOTAL = 2932;
 const REVIEW_RATING = "4.8";
 const PRODUCT_PRICE_CENTS = 3299;
-const RETAIL_PRICE_CENTS = PRODUCT_PRICE_CENTS * 2;
+const RETAIL_PRICE_CENTS = 6599;
 const PRODUCT_PRICE_LABEL = `$${(PRODUCT_PRICE_CENTS / 100).toFixed(2)}`;
 const RETAIL_PRICE_LABEL = `$${(RETAIL_PRICE_CENTS / 100).toFixed(2)}`;
 
@@ -600,12 +600,14 @@ const REVIEWS = [
 ];
 
 const REVIEW_MEDIA = [
-  { type: "image", src: "/product-hero.png", label: "Customer photo" },
+  { type: "image", src: "/Customer reviews 1.jpg", label: "Customer review" },
+  { type: "image", src: "/Customer reviews 2.jpg", label: "Customer review" },
   { type: "video", src: CUSTOMER_VIDEO_SRC, label: "Customer video" },
-  { type: "image", src: "/Listing Image 7.jpg", label: "Soft fabric" },
-  { type: "image", src: "/Listing Image 5.jpg", label: "Workday use" },
-  { type: "image", src: "/comfywon-white-variant.png", label: "White color" },
-  { type: "image", src: "/Listing Image 1.jpg", label: "Pink color" },
+  { type: "image", src: "/Customer reviews 3.jpg", label: "Customer review" },
+  { type: "image", src: "/Customer reviews 4.jpg", label: "Customer review" },
+  { type: "image", src: "/Customer reviews 5.jpg", label: "Customer review" },
+  { type: "image", src: "/Customer reviews 6.jpeg", label: "Customer review" },
+  { type: "image", src: "/Customer reviews 7.jpeg", label: "Customer review" },
 ];
 
 const TRUST_BADGES = [
@@ -1458,12 +1460,49 @@ function ProductGallery({ selectedColor }) {
   const goToImage = (direction) => {
     setActiveIndex((current) => (current + direction + gallery.length) % gallery.length);
   };
+  const touchStartX = React.useRef(0);
+  const didSwipe = React.useRef(false);
+  const lightboxTouchStartX = React.useRef(0);
+
+  const handleTouchStart = (event) => {
+    touchStartX.current = event.touches[0]?.clientX || 0;
+    didSwipe.current = false;
+  };
+
+  const handleTouchEnd = (event) => {
+    const endX = event.changedTouches[0]?.clientX || 0;
+    const delta = endX - touchStartX.current;
+    if (Math.abs(delta) < 45) return;
+    didSwipe.current = true;
+    goToImage(delta > 0 ? -1 : 1);
+  };
+
+  const handleMainClick = () => {
+    if (didSwipe.current) {
+      didSwipe.current = false;
+      return;
+    }
+    setLightboxOpen(true);
+  };
+
+  const handleLightboxTouchStart = (event) => {
+    lightboxTouchStartX.current = event.touches[0]?.clientX || 0;
+  };
+
+  const handleLightboxTouchEnd = (event) => {
+    const endX = event.changedTouches[0]?.clientX || 0;
+    const delta = endX - lightboxTouchStartX.current;
+    if (Math.abs(delta) < 45) return;
+    goToImage(delta > 0 ? -1 : 1);
+  };
 
   return (
     <div className="mobile-card-bound min-w-0 w-full max-w-[calc(100vw-2rem)] lg:max-w-none">
       <button
         className="block w-full overflow-hidden rounded-[28px] border border-rose-100 bg-white shadow-[0_18px_45px_rgba(178,75,98,0.12)]"
-        onClick={() => setLightboxOpen(true)}
+        onClick={handleMainClick}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
         aria-label={active?.type === "video" ? "Expand customer video" : "Expand product image"}
       >
         {active?.type === "video" ? (
@@ -1514,6 +1553,18 @@ function ProductGallery({ selectedColor }) {
           </button>
         ))}
       </div>
+      <div className="mt-3 flex items-center justify-center gap-2">
+        {gallery.map((item, index) => (
+          <button
+            key={`gallery-dot-${item.type}-${item.src}`}
+            className={`h-2.5 rounded-full transition-all ${
+              activeIndex === index ? "w-7 bg-[#bd003f]" : "w-2.5 bg-rose-200"
+            }`}
+            onClick={() => setActiveIndex(index)}
+            aria-label={`Go to product media ${index + 1}`}
+          />
+        ))}
+      </div>
 
       <AnimatePresence>
         {lightboxOpen && (
@@ -1531,6 +1582,8 @@ function ProductGallery({ selectedColor }) {
               exit={{ opacity: 0, scale: 0.98 }}
               transition={{ duration: 0.22, ease: "easeOut" }}
               onClick={(event) => event.stopPropagation()}
+              onTouchStart={handleLightboxTouchStart}
+              onTouchEnd={handleLightboxTouchEnd}
             >
               <button
                 className="absolute right-2 top-2 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white text-[#bd003f] shadow-lg"
@@ -1538,13 +1591,6 @@ function ProductGallery({ selectedColor }) {
                 aria-label="Close expanded product image"
               >
                 <Icon name="x" size={22} />
-              </button>
-              <button
-                className="absolute left-2 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-white/92 text-[#bd003f] shadow-lg sm:left-4"
-                onClick={() => goToImage(-1)}
-                aria-label="Previous product image"
-              >
-                <Icon name="arrow" size={24} className="rotate-180" />
               </button>
               {active?.type === "video" ? (
                 <video
@@ -1563,13 +1609,18 @@ function ProductGallery({ selectedColor }) {
                   className="max-h-[88vh] w-full max-w-[92vw] rounded-[22px] bg-white object-contain p-2 shadow-[0_30px_90px_rgba(0,0,0,0.35)]"
                 />
               )}
-              <button
-                className="absolute right-2 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-white/92 text-[#bd003f] shadow-lg sm:right-4"
-                onClick={() => goToImage(1)}
-                aria-label="Next product image"
-              >
-                <Icon name="arrow" size={24} />
-              </button>
+              <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-full bg-white/88 px-3 py-2 shadow-lg backdrop-blur">
+                {gallery.map((item, index) => (
+                  <button
+                    key={`lightbox-dot-${item.type}-${item.src}`}
+                    className={`h-2.5 rounded-full transition-all ${
+                      activeIndex === index ? "w-7 bg-[#bd003f]" : "w-2.5 bg-rose-200"
+                    }`}
+                    onClick={() => setActiveIndex(index)}
+                    aria-label={`Go to expanded media ${index + 1}`}
+                  />
+                ))}
+              </div>
             </motion.div>
           </motion.div>
         )}
@@ -2018,28 +2069,81 @@ function RatingBars() {
 }
 
 function ReviewMediaCard({ item }) {
+  const [open, setOpen] = useState(false);
+
   return (
-    <button className="relative min-w-[150px] snap-start overflow-hidden rounded-[18px] bg-white shadow-sm sm:min-w-[190px]">
-      {item.type === "video" ? (
-        <video
-          src={item.src}
-          className="aspect-square w-full object-cover"
-          muted
-          playsInline
-          preload="metadata"
-        />
-      ) : (
-        <img src={item.src} alt={item.label} className="aspect-square w-full object-cover" />
-      )}
-      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/55 to-transparent p-3 text-left text-[12px] font-black text-white">
-        {item.label}
-      </div>
-      {item.type === "video" && (
-        <span className="absolute left-1/2 top-1/2 flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white/85 text-[#bd003f] shadow-lg">
-          <Icon name="play" size={19} fill="currentColor" strokeWidth={0} />
-        </span>
-      )}
-    </button>
+    <>
+      <button
+        className="relative min-w-[150px] snap-start overflow-hidden rounded-[18px] bg-white shadow-sm sm:min-w-[190px] lg:min-w-0"
+        onClick={() => setOpen(true)}
+        aria-label={`Expand ${item.label}`}
+      >
+        {item.type === "video" ? (
+          <video
+            src={item.src}
+            className="aspect-square w-full object-cover"
+            muted
+            playsInline
+            preload="metadata"
+          />
+        ) : (
+          <img src={item.src} alt={item.label} className="aspect-square w-full object-cover" />
+        )}
+        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/55 to-transparent p-3 text-left text-[12px] font-black text-white">
+          {item.label}
+        </div>
+        {item.type === "video" && (
+          <span className="absolute left-1/2 top-1/2 flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white/85 text-[#bd003f] shadow-lg">
+            <Icon name="play" size={19} fill="currentColor" strokeWidth={0} />
+          </span>
+        )}
+      </button>
+
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            className="fixed inset-0 z-[95] flex items-center justify-center bg-[#2b0614]/85 p-3 backdrop-blur-sm"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setOpen(false)}
+          >
+            <motion.div
+              className="relative flex h-full w-full max-w-5xl items-center justify-center"
+              initial={{ opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.98 }}
+              transition={{ duration: 0.22, ease: "easeOut" }}
+              onClick={(event) => event.stopPropagation()}
+            >
+              <button
+                className="absolute right-2 top-2 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white text-[#bd003f] shadow-lg"
+                onClick={() => setOpen(false)}
+                aria-label="Close expanded review media"
+              >
+                <Icon name="x" size={22} />
+              </button>
+              {item.type === "video" ? (
+                <video
+                  src={item.src}
+                  className="max-h-[88vh] w-full max-w-[92vw] rounded-[22px] bg-black object-contain shadow-[0_30px_90px_rgba(0,0,0,0.35)]"
+                  controls
+                  autoPlay
+                  playsInline
+                  preload="metadata"
+                />
+              ) : (
+                <img
+                  src={item.src}
+                  alt={item.label}
+                  className="max-h-[88vh] w-full max-w-[92vw] rounded-[22px] bg-white object-contain p-2 shadow-[0_30px_90px_rgba(0,0,0,0.35)]"
+                />
+              )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
 
@@ -2051,7 +2155,14 @@ function ReviewAvatar({ name }) {
   );
 }
 
+function getDisplayedHelpfulCount(helpful = 0) {
+  return helpful > 150 ? helpful - 50 : helpful;
+}
+
 function FullReview({ review }) {
+  const [helpfulClicked, setHelpfulClicked] = useState(false);
+  const [reported, setReported] = useState(false);
+
   return (
     <article className="border-b border-stone-200 py-6 last:border-0">
       <div className="flex gap-4">
@@ -2076,9 +2187,31 @@ function FullReview({ review }) {
             />
           )}
           <div className="mt-4 flex flex-wrap items-center gap-3 text-[13px] text-stone-500">
-            <span>{review.helpful} people found this helpful</span>
-            <button className="rounded-full border border-stone-200 px-4 py-2 font-bold text-stone-700">Helpful</button>
-            <button className="font-bold text-stone-500">Report</button>
+            <span>{getDisplayedHelpfulCount(review.helpful)} people found this helpful</span>
+            <motion.button
+              className={`rounded-full px-4 py-2 font-bold shadow-sm ${
+                helpfulClicked
+                  ? "bg-[#bd003f] text-white"
+                  : "border border-stone-200 bg-white text-stone-700"
+              }`}
+              onClick={() => setHelpfulClicked(true)}
+              whileTap={{ scale: 0.94 }}
+              animate={helpfulClicked ? { scale: [1, 1.08, 1] } : { scale: 1 }}
+              transition={{ duration: 0.24, ease: "easeOut" }}
+            >
+              {helpfulClicked ? "+1" : "Helpful"}
+            </motion.button>
+            <motion.button
+              className={`font-bold ${
+                reported ? "rounded-full bg-rose-50 px-3 py-2 text-[#bd003f]" : "text-stone-500"
+              }`}
+              onClick={() => setReported(true)}
+              whileTap={{ scale: 0.94 }}
+              animate={reported ? { opacity: [0.65, 1], y: [2, 0] } : { opacity: 1, y: 0 }}
+              transition={{ duration: 0.22, ease: "easeOut" }}
+            >
+              {reported ? "Reported" : "Report"}
+            </motion.button>
           </div>
         </div>
       </div>
@@ -2278,7 +2411,7 @@ function ReviewsPage({ navigate }) {
               <h2 className="text-[22px] font-black text-stone-950">Reviews with images and videos</h2>
               <Icon name="image" size={24} className="text-[#bd003f]" />
             </div>
-            <div className="no-scrollbar -mx-4 mt-4 flex snap-x gap-3 overflow-x-auto px-4 pb-2">
+            <div className="no-scrollbar -mx-4 mt-4 flex snap-x gap-3 overflow-x-auto px-4 pb-2 lg:mx-0 lg:grid lg:grid-cols-4 lg:overflow-visible lg:px-0">
               {REVIEW_MEDIA.map((item) => (
                 <ReviewMediaCard key={item.src + item.label} item={item} />
               ))}
