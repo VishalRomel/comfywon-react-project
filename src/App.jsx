@@ -16,6 +16,25 @@ function isSafeCheckoutUrl(url) {
   }
 }
 
+// Meta Pixel — fire only if the script loaded (it can be blocked by ad-blockers,
+// or absent in dev). Never throw, never block UX.
+function trackPixel(event, params) {
+  if (typeof window === "undefined") return;
+  const fbq = window.fbq;
+  if (typeof fbq !== "function") return;
+  try {
+    fbq("track", event, params);
+  } catch {
+    // swallow — analytics must never break checkout
+  }
+}
+
+// Strip the GID prefix so Meta sees a clean numeric id matching Shopify's catalog.
+function variantIdToContentId(variantId) {
+  const parts = String(variantId || "").split("/");
+  return parts[parts.length - 1] || "";
+}
+
 const ICON_PATHS = {
   menu: (
     <>
@@ -2583,6 +2602,15 @@ export default function App() {
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "auto" });
+    if (route === "product") {
+      trackPixel("ViewContent", {
+        content_type: "product",
+        content_name: "ComfyWon Cordless Heating Belt",
+        content_ids: PRODUCT_COLORS.map((c) => variantIdToContentId(c.variantId)),
+        value: 30,
+        currency: "USD",
+      });
+    }
   }, [route]);
 
   useEffect(() => {
@@ -2641,6 +2669,14 @@ export default function App() {
     setCheckoutError("");
     setCartModalView("added");
     setCartModalOpen(true);
+    trackPixel("AddToCart", {
+      content_type: "product",
+      content_name: `ComfyWon Cordless Heating Belt — ${color?.label || ""}`.trim(),
+      content_ids: [variantIdToContentId(color.variantId)],
+      contents: [{ id: variantIdToContentId(color.variantId), quantity: safeQty }],
+      value: safeQty * 30,
+      currency: "USD",
+    });
   };
 
   const handleCartClick = () => {
